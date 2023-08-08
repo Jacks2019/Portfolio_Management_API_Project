@@ -13,7 +13,7 @@
 
 ### Tasks
 
-- [ ] project name
+- [x] project name：FOURever NOOBS
 - [x] git repository
 - [x] readme.md
 - [x] task allocation
@@ -21,4 +21,6 @@
 - [ ] class diagrams
 
 ### Accomplished
+
+- 
 

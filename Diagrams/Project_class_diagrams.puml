@@ -1,0 +1,49 @@
+@startuml
+class Account{
+    -String accountId
+    -String accountName
+    -String password
+}
+
+class Stock{
+    -int id
+    -String ticker
+    -String name
+    -Date date
+    -double currentPrice
+    -double openDate
+    -double highPrice
+    -double lowPrice
+    -double closePrice
+    -double vol
+}
+
+class StockHold{
+    -int id
+    -int accountId
+    -String ticker
+    -double callPrice
+    -int amount
+    -Date time
+}
+
+class Assets{
+    -int id
+    -int accountId
+    -double totalAssets
+    -double stockAssets
+    -double balance
+}
+
+class Trade{
+    -int id
+    -int accountId
+    -int ticker
+    -int type
+    -date time
+    -double callPrice
+    -double endPrice
+    -int amount
+    -double totalInvolved
+}
+@enduml
