@@ -2,7 +2,11 @@ package com.portfolio.mgmtsys.domain;
 
 import java.util.Date;
 
+import com.portfolio.mgmtsys.enumeration.TransferType;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -21,7 +25,8 @@ public class Transfer {
     private Integer accountId;
 
     @Column(name = "type")
-    private Integer type;
+    @Enumerated(EnumType.ORDINAL)
+    private TransferType type;
 
     @Column(name = "time")
     private Date time;

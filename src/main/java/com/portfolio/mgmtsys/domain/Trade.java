@@ -2,7 +2,11 @@ package com.portfolio.mgmtsys.domain;
 
 import java.util.Date;
 
+import com.portfolio.mgmtsys.enumeration.TradeType;
+
 import jakarta.persistence.Column;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -24,7 +28,8 @@ public class Trade {
     private String ticker;
 
     @Column(name = "type")
-    private int type;
+    @Enumerated(EnumType.ORDINAL)
+    private TradeType type;
 
     @Column(name = "time")
     private Date time;
