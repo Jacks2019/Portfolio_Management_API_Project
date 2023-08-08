@@ -11,5 +11,5 @@ Group9
 ### Task allocation
 
 1. Yawei：Frontend Display
-2. Yancheng：Data Retrieval and Database Table Creation
-3. Zihan & Xiaoyu：Backend Data Processing
+2. Zihan：Data Retrieval and Database Table Creation
+3. Yancheng & Xiaoyu：Backend Data Processing
