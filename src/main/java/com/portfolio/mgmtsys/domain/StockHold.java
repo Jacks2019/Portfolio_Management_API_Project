@@ -7,18 +7,23 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-// @Entity
-@Table(name = "account")
+@Table(name = "stock_hold")
 @Data
-public class Account {
+public class StockHold {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "account_id")
+    private int accountId;
 
-    @Column(name = "password")
-    private String password;
+    @Column(name = "ticker")
+    private String ticker;
+
+    @Column(name = "call_price")
+    private Double callPrice;
+
+    @Column(name = "amount")
+    private Integer amount;
 }
