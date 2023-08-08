@@ -4,18 +4,20 @@ import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 
 // @Entity
+@Table(name = "account")
 @Data
 public class Account {
     @Id
-    @Column(name = "account_id")
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private String accountId;
+    private Integer id;
 
-    @Column(name = "account_name")
-    private String accountName;
+    @Column(name = "name")
+    private String name;
 
     @Column(name = "password")
     private String password;
