@@ -22,4 +22,18 @@ public class AccountServiceImpl implements AccountService {
         }
         return null;
     }
+
+    public Account register(Account account){
+        Account accountToBeRegistered = new Account();
+        accountToBeRegistered.setName(account.getName());
+        Example<Account> nameToBeRegistered = Example.of(accountToBeRegistered);
+        Optional<Account> foundAccount = repo.findOne(nameToBeRegistered);
+        if(foundAccount.isPresent()){
+            return null;
+        }
+        repo.save(account);
+        Account registeredAccount = repo.findOne(nameToBeRegistered).get();
+        registeredAccount.setPassword(null);
+        return registeredAccount;
+    }
 }

@@ -31,4 +31,13 @@ public class AccountController {
         }
         return new ResponseEntity<Object>(null, HttpStatus.UNAUTHORIZED);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<Object> register(@RequestBody Account account){
+        Account registeredAccount = service.register(account);
+        if(registeredAccount!=null){
+            return new ResponseEntity<Object>(registeredAccount, HttpStatus.ACCEPTED);
+        }
+        return new ResponseEntity<Object>("Account name may already exist.", HttpStatus.CONFLICT);
+    }
 }
