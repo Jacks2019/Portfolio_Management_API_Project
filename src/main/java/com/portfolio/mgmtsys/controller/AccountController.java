@@ -1,5 +1,9 @@
 package com.portfolio.mgmtsys.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -8,14 +12,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.mgmtsys.domain.Account;
+import com.portfolio.mgmtsys.service.AccountService;
 
 @RestController
 @RequestMapping("/account")
 public class AccountController {
     
+    @Autowired
+    AccountService service;
+
     @PostMapping("/login")
     public ResponseEntity<Object> login(@RequestBody Account account){
-        System.out.println(account);
+        Integer accountId = service.login(account);
+        if(accountId!=null){
+            Map<String, Object> body = new HashMap<>();
+            body.put("id", accountId);
+            return new ResponseEntity<Object>(body, HttpStatus.ACCEPTED);
+        }
         return new ResponseEntity<Object>(null, HttpStatus.UNAUTHORIZED);
     }
 }

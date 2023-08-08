@@ -1,5 +1,7 @@
 package com.portfolio.mgmtsys.service;
 
+import com.portfolio.mgmtsys.domain.Account;
+
 public interface AccountService {
-    Integer login();
+    Integer login(Account account);
 }
