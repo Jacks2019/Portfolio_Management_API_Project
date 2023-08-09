@@ -10,10 +10,11 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Table(name = "transfer")
+@Table(name = "transfer", indexes = {@Index(columnList = "account_id")})
 @Data
 public class Transfer {
     @Id
