@@ -5,11 +5,13 @@ import java.util.Optional;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.stereotype.Service;
 
 import com.portfolio.mgmtsys.domain.Account;
 import com.portfolio.mgmtsys.repository.AccountRepo;
 import com.portfolio.mgmtsys.service.AccountService;
 
+@Service
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
