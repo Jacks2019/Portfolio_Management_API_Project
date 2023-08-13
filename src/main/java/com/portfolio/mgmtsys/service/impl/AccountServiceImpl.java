@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.portfolio.mgmtsys.domain.Account;
 import com.portfolio.mgmtsys.repository.AccountRepo;
 import com.portfolio.mgmtsys.service.AccountService;
+import org.springframework.stereotype.Service;
 
 @Service
 public class AccountServiceImpl implements AccountService {

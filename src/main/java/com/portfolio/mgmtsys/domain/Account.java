@@ -9,9 +9,9 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Table(name = "account", indexes = {@Index(columnList = "name")})
 @Data
+@Entity
 public class Account {
     @Id
     @Column(name = "id")
