@@ -18,4 +18,5 @@ import java.util.ArrayList;
 public interface StockRepo extends JpaRepository<Stock,Integer>{
     @Query("SELECT e FROM Stock e WHERE e.ticker = :ticker")
     ArrayList<Stock> findAllByTicker(String ticker);
+
 }

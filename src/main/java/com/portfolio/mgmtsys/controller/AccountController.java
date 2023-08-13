@@ -27,7 +27,7 @@ public class AccountController {
             body.put("id", accountId);
             return new ResponseEntity<Object>(body, HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<Object>(null, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<Object>("Account name or password may be incorrect.", HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/register")

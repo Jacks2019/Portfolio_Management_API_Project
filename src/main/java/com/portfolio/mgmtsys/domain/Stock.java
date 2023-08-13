@@ -5,10 +5,12 @@ import java.util.Date;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Table(name = "stock")
+@Entity
+@Table(name = "stock", indexes = {@Index(columnList = "ticker")})
 @Data
 @Entity
 public class Stock {

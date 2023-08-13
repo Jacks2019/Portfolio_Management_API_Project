@@ -1,6 +1,8 @@
 package com.portfolio.mgmtsys.domain;
 
+
 import jakarta.persistence.*;
+
 import lombok.Data;
 
 @Table(name = "stock_hold")
