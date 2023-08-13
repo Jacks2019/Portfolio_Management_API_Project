@@ -5,15 +5,18 @@ import java.util.Date;
 import com.portfolio.mgmtsys.enumeration.TransferType;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Table(name = "transfer")
+@Entity
+@Table(name = "transfer", indexes = {@Index(columnList = "account_id")})
 @Data
 public class Transfer {
     @Id
