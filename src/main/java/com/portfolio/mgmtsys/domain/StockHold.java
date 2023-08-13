@@ -1,14 +1,11 @@
 package com.portfolio.mgmtsys.domain;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Table(name = "stock_hold")
 @Data
+@Entity
 public class StockHold {
     @Id
     @Column(name = "id")

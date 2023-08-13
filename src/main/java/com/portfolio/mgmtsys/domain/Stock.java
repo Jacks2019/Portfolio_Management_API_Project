@@ -3,12 +3,14 @@ package com.portfolio.mgmtsys.domain;
 import java.util.Date;
 
 import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Table(name = "stock")
 @Data
+@Entity
 public class Stock {
     @Id
     @Column(name = "ticker")
