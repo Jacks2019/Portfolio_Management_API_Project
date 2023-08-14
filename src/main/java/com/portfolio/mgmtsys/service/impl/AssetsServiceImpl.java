@@ -5,7 +5,6 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.portfolio.mgmtsys.domain.Account;
 import com.portfolio.mgmtsys.domain.Assets;
 import com.portfolio.mgmtsys.repository.AssetsRepo;
 import com.portfolio.mgmtsys.service.AssetsService;
