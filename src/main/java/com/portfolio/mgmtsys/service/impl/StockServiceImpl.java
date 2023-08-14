@@ -29,7 +29,7 @@ public class StockServiceImpl implements StockService {
     public List<Stock> searchStock(Map<String, Object> searchMap) {
         Stock searchStock = new Stock();
         Class<Stock> stockClazz = Stock.class;
-        // Set the query condition with Reflection
+        // Set the query conditions with Reflection
         for(String key:searchMap.keySet()){
             try {
                 Field field = stockClazz.getDeclaredField(key);
