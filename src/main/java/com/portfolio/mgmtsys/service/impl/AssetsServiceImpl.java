@@ -1,5 +1,6 @@
 package com.portfolio.mgmtsys.service.impl;
 
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +25,21 @@ public class AssetsServiceImpl implements AssetsService {
     }
 
     @Override
-    public Assets transferIn(Account account) {
-        throw new UnsupportedOperationException("Unimplemented method 'transferIn'");
+    public Assets transferIn(Map<String, Object> request) {
+        Integer id = (Integer)request.get("id");
+        Double amount = (Double)request.get("amount");
+        Optional<Assets> assetsOptional = repo.findById(id);
+        if(!assetsOptional.isPresent()){
+            return null;
+        }
+        Assets assets = assetsOptional.get();
+        assets.setBalance(assets.getBalance() + amount);
+        repo.save(assets);
+        return assets;
     }
 
     @Override
-    public Assets transferOut(Account account) {
+    public Assets transferOut(Map<String, Object> request) {
         throw new UnsupportedOperationException("Unimplemented method 'transferOut'");
     }
     
