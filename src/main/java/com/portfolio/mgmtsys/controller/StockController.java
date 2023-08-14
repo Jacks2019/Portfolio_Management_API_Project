@@ -23,8 +23,8 @@ public class StockController {
     private StockService service;
 
     @GetMapping("/getAllStocks")
-    public ResponseEntity<Object> getAllStocks(){
-        return new ResponseEntity<Object>(service.getAllStocks(), HttpStatus.FOUND);
+    public ResponseEntity<Object> getAllStocks(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize){
+        return new ResponseEntity<Object>(service.getAllStocks(page, pageSize), HttpStatus.FOUND);
     }
 
     @GetMapping("/searchStock")

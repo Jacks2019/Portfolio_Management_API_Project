@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.mgmtsys.domain.Stock;
@@ -21,8 +22,9 @@ public class StockServiceImpl implements StockService {
     @Autowired
     private StockRepo repo;
 
-    public List<Stock> getAllStocks() {
-        return repo.findAll();
+    public List<Stock> getAllStocks(Integer page, Integer pageSize) {
+        PageRequest pagination = PageRequest.of(page==null?0:page-1, pageSize==null?50:pageSize);
+        return repo.findAll(pagination).toList();
     }
 
     @Override
