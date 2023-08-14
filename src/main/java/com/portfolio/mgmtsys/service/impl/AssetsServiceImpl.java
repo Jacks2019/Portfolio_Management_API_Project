@@ -40,7 +40,16 @@ public class AssetsServiceImpl implements AssetsService {
 
     @Override
     public Assets transferOut(Map<String, Object> request) {
-        throw new UnsupportedOperationException("Unimplemented method 'transferOut'");
+        Integer id = (Integer)request.get("id");
+        Double amount = (Double)request.get("amount");
+        Optional<Assets> assetsOptional = repo.findById(id);
+        if(!assetsOptional.isPresent()){
+            return null;
+        }
+        Assets assets = assetsOptional.get();
+        assets.setBalance(assets.getBalance() - amount);
+        repo.save(assets);
+        return assets;
     }
     
 }
