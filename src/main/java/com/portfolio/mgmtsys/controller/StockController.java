@@ -21,4 +21,6 @@ public class StockController {
     public List<Stock> getAllStocks(){
         return service.getAllStocks();
     }
+    
+    
 }
