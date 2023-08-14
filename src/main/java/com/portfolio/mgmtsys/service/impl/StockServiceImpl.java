@@ -49,6 +49,7 @@ public class StockServiceImpl implements StockService {
     @Override
     public Stock getStockByTicker(String ticker) {
         Stock tickerStock = new Stock();
+        tickerStock.setTicker(ticker);
         Example<Stock> tickerExample = Example.of(tickerStock);
         Optional<Stock> stockOptional = repo.findOne(tickerExample);
         if(stockOptional.isPresent()){

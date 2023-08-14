@@ -22,7 +22,6 @@ import java.util.LinkedList;
 @RequestMapping("/stock")
 public class StockHoldController {
 
-    @Autowired
     StockHoldService service;
 
     @PostMapping("/getallstockhold")
