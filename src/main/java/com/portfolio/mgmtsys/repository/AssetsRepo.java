@@ -6,11 +6,12 @@ package com.portfolio.mgmtsys.repository;
  * Description:
  */
 
+import com.portfolio.mgmtsys.domain.Assets;
 import com.portfolio.mgmtsys.domain.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import java.util.ArrayList;
+import org.springframework.stereotype.Repository;
 
-public interface StockRepo extends JpaRepository<Stock,Integer>{
+@Repository
+public interface AssetsRepo extends JpaRepository<Assets,Integer>{
 
 }
