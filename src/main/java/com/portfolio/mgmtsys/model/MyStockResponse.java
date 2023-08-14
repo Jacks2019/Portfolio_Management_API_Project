@@ -6,7 +6,7 @@ package com.portfolio.mgmtsys.model;
  * Description:
  */
 
-public class MyStock {
+public class MyStockResponse {
     String stockName;
 
     String ticker;
@@ -15,7 +15,7 @@ public class MyStock {
 
     Double currentPrice;
 
-    public MyStock(String stockName, String ticker, Integer amount, Double currentPrice) {
+    public MyStockResponse(String stockName, String ticker, Integer amount, Double currentPrice) {
         this.stockName = stockName;
         this.ticker = ticker;
         this.amount = amount;

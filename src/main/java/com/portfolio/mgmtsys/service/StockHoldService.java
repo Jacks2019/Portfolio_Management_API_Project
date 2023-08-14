@@ -6,7 +6,9 @@ package com.portfolio.mgmtsys.service;
  * Description:
  */
 
-import com.portfolio.mgmtsys.model.MyStock;
+import com.portfolio.mgmtsys.model.BuyStockRequest;
+import com.portfolio.mgmtsys.model.MyStockResponse;
+import com.portfolio.mgmtsys.model.SellStockRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
@@ -14,5 +16,9 @@ import java.util.LinkedList;
 @Service
 public interface StockHoldService {
 
-    LinkedList<MyStock> getAllStockHold(Integer accountId);
+    LinkedList<MyStockResponse> getAllStockHold(Integer accountId);
+
+    boolean buyStock(BuyStockRequest request);
+
+    boolean sellStock(SellStockRequest request);
 }

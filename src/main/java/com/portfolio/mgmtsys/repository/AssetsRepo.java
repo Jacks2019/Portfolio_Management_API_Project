@@ -1,9 +1,17 @@
 package com.portfolio.mgmtsys.repository;
 
-import org.springframework.data.jpa.repository.JpaRepository;
+/*
+ * Name: xiaoyu
+ * Date: 2023/8/13
+ * Description:
+ */
 
 import com.portfolio.mgmtsys.domain.Assets;
+import com.portfolio.mgmtsys.domain.Stock;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AssetsRepo extends JpaRepository<Assets, Integer> {
-    
+@Repository
+public interface AssetsRepo extends JpaRepository<Assets,Integer>{
+
 }
