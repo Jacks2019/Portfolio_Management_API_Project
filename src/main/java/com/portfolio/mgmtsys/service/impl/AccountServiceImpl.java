@@ -8,7 +8,9 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.mgmtsys.domain.Account;
+import com.portfolio.mgmtsys.domain.Assets;
 import com.portfolio.mgmtsys.repository.AccountRepo;
+import com.portfolio.mgmtsys.repository.AssetsRepo;
 import com.portfolio.mgmtsys.service.AccountService;
 
 @Service
@@ -16,6 +18,9 @@ public class AccountServiceImpl implements AccountService {
 
     @Autowired
     AccountRepo repo;
+
+    @Autowired
+    AssetsRepo assetsRepo;
 
     public Integer login(Account account){
         Account accountEncrypted = new Account();
@@ -43,6 +48,12 @@ public class AccountServiceImpl implements AccountService {
         repo.save(accountEncrypted);
         Account registeredAccount = repo.findOne(nameToBeRegistered).get();
         registeredAccount.setPassword(null);
+        Assets newAssets = new Assets();
+        newAssets.setId(registeredAccount.getId());
+        newAssets.setBalance(0.0);
+        newAssets.setStockAssets(0.0);
+        newAssets.setTotalAssets(0.0);
+        assetsRepo.save(newAssets);
         return registeredAccount;
     }
 }

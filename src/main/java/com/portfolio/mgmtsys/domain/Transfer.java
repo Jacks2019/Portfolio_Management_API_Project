@@ -35,5 +35,5 @@ public class Transfer {
     private Date time;
 
     @Column(name = "amount")
-    private Integer amount;
+    private Double amount;
 }

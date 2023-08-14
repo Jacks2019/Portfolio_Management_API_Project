@@ -2,24 +2,17 @@ package com.portfolio.mgmtsys.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
 @Entity
-@Table(name = "assets", indexes = {@Index(columnList = "account_id")})
+@Table(name = "assets")
 @Data
 public class Assets {
     @Id
     @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
-    @Column(name = "account_id")
-    private Integer accountId;
 
     @Column(name = "total_assets")
     private Double totalAssets;
