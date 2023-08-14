@@ -9,7 +9,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity
 @Table(name = "stock", indexes = {@Index(columnList = "ticker")})
 @Data
 public class Stock {
