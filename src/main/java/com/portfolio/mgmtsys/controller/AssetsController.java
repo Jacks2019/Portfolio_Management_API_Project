@@ -39,4 +39,13 @@ public class AssetsController {
         }
         return new ResponseEntity<Object>(assets, HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/transferin")
+    public ResponseEntity<Object> transferOut(@RequestBody Map<String, Object> request){
+        Assets assets = service.transferOut(request);
+        if(assets==null){
+            return new ResponseEntity<Object>("Account not found.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<Object>(assets, HttpStatus.ACCEPTED);
+    }
 }
