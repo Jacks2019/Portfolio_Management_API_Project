@@ -7,11 +7,11 @@ package com.portfolio.mgmtsys.model;
  */
 
 public class BuyStockRequest {
-    Integer accountId;
+    private Integer accountId;
 
-    String ticker;
+    private String ticker;
 
-    Integer amount;
+    private Integer amount;
 
     public Integer getAccountId() {
         return accountId;

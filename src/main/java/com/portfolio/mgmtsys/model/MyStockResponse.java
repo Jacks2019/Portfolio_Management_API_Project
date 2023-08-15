@@ -7,13 +7,13 @@ package com.portfolio.mgmtsys.model;
  */
 
 public class MyStockResponse {
-    String stockName;
+    private String stockName;
 
-    String ticker;
+    private String ticker;
 
-    Integer amount;
+    private Integer amount;
 
-    Double currentPrice;
+    private Double currentPrice;
 
     public MyStockResponse(String stockName, String ticker, Integer amount, Double currentPrice) {
         this.stockName = stockName;
