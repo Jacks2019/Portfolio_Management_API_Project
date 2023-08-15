@@ -6,9 +6,9 @@ import lombok.Data;
 import java.util.Date;
 
 @Entity
-@Table(name = "historical_stock", indexes = {@Index(columnList = "ticker")})
+@Table(name = "stock_his", indexes = {@Index(columnList = "ticker")})
 @Data
-public class HistoricalStock {
+public class StockHis {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
