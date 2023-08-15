@@ -17,7 +17,7 @@ public class FundServiceImpl implements FundService {
 
     @Override
     public List<Fund> getAllFunds() {
-        throw new UnsupportedOperationException("Unimplemented method 'getAllFunds'");
+        return repo.findAll();
     }
 
     @Override
