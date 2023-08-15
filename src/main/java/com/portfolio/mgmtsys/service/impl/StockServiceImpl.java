@@ -41,11 +41,14 @@ public class StockServiceImpl implements StockService {
                 e.printStackTrace();
             }
         }
+        Object page = searchMap.get("page");
+        Object pageSize = searchMap.get("pageSize");
+        PageRequest pagination = PageRequest.of(page==null?0:(Integer)page-1, pageSize==null?50:(Integer)pageSize);
         ExampleMatcher matcher = ExampleMatcher.matching()
             .withMatcher("ticker", GenericPropertyMatchers.contains())
             .withMatcher("name", GenericPropertyMatchers.contains());
         Example<Stock> searchExample = Example.of(searchStock, matcher);
-        return repo.findAll(searchExample);
+        return repo.findAll(searchExample, pagination).toList();
     }
 
     @Override
