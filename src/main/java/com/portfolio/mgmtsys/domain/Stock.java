@@ -12,7 +12,6 @@ import lombok.Data;
 @Entity
 @Table(name = "stock", indexes = {@Index(columnList = "ticker")})
 @Data
-@Entity
 public class Stock {
     @Id
     @Column(name = "ticker")

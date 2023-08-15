@@ -6,9 +6,8 @@ package com.portfolio.mgmtsys.controller;
  * Description:
  */
 
-import com.portfolio.mgmtsys.model.BuyStockRequest;
-import com.portfolio.mgmtsys.model.MyStockResponse;
-import com.portfolio.mgmtsys.model.SellStockRequest;
+import com.portfolio.mgmtsys.domain.Trade;
+import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stockhold")
 public class StockHoldController {
 
     StockHoldService service;
@@ -45,5 +44,13 @@ public class StockHoldController {
         return buystock ?
                 new ResponseEntity<>(true, HttpStatus.ACCEPTED):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/gettrades")
+    public ResponseEntity<Object> getTrades(@RequestBody GetTradesRequest request){
+        LinkedList<Trade> response = service.getTrades(request);
+        return response == null ?
+                new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
+                new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 }
