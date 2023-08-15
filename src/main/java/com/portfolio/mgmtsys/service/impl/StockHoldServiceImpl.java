@@ -6,15 +6,9 @@ package com.portfolio.mgmtsys.service.impl;
  * Description:
  */
 
-import com.portfolio.mgmtsys.domain.Assets;
-import com.portfolio.mgmtsys.domain.Stock;
-import com.portfolio.mgmtsys.domain.StockHold;
-import com.portfolio.mgmtsys.domain.Trade;
+import com.portfolio.mgmtsys.domain.*;
 import com.portfolio.mgmtsys.model.*;
-import com.portfolio.mgmtsys.repository.AssetsRepo;
-import com.portfolio.mgmtsys.repository.StockHoldRepo;
-import com.portfolio.mgmtsys.repository.StockRepo;
-import com.portfolio.mgmtsys.repository.TradeRepo;
+import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +34,9 @@ public class StockHoldServiceImpl implements StockHoldService {
     @Autowired
     TradeRepo tradeRepo;
 
+    @Autowired
+    StockHisRepo stockHisRepo;
+
     private Stock findStockByTicker(String ticker){
         Stock stock = new Stock();
         stock.setTicker(ticker);
@@ -62,11 +59,20 @@ public class StockHoldServiceImpl implements StockHoldService {
         trade.setAccountId(accountId);
         trade.setTicker(ticker);
         Example<Trade> example = Example.of(trade);
-        return tradeRepo.findAll(timeLimit(startTime, endTime,example));
+        Specification<Trade> tradeSpecification = timeLimit(startTime, endTime, example);
+        return tradeRepo.findAll(tradeSpecification);
     }
 
-    private Specification<Trade> timeLimit(Date startTime, Date endTime, Example<Trade> example) {
-        return (Specification<Trade>) (root, query, builder) -> {
+    private List<StockHis> findStockHis(String ticker, Date startTime, Date endTime) {
+        StockHis stockHis = new StockHis();
+        stockHis.setTicker(ticker);
+        Example<StockHis> example = Example.of(stockHis);
+        Specification<StockHis> stockHisSpecification = timeLimit(startTime, endTime, example);
+        return stockHisRepo.findAll(stockHisSpecification);
+    }
+
+    private <T> Specification<T> timeLimit(Date startTime, Date endTime, Example<T> example) {
+        return (Specification<T>) (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             predicates.add(builder.greaterThan(root.get("time"), startTime));
             predicates.add(builder.lessThan(root.get("time"),endTime));
@@ -220,31 +226,21 @@ public class StockHoldServiceImpl implements StockHoldService {
      */
     @Override
     public LinkedList<Trade> getTrades(GetTradesRequest request) {
-        LinkedList<Trade> responses = new LinkedList<>();
+
         // 1. 获取stockhold
         Integer accountId = request.getAccountId();
         // 我的所有持股
         ArrayList<StockHold> myStocks = stockHoldRepo.findAllByAccountId(accountId);
         
         // 2. 获取时间限制，默认七天内
-
         // 定义日期范围
         // 获取当前时间
-        Date startTime = new Date();
-        // 创建 Calendar 对象并设置为当前时间
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(startTime);
-        // 将日期往前推7天
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-        // 获取七天前的时间
-        Date endTime = calendar.getTime();
-
-        startTime = request.getStartTime() == null ? startTime: request.getStartTime();// 设置开始时间
-        endTime = request.getEndTime() == null ? endTime : request.getEndTime();// 设置结束时间
-        if (startTime.getTime() > endTime.getTime()){
+        Date[] time = extractedTime(request);
+        if (time[0].getTime() > time[1].getTime()){
             return null;
         }
 
+        LinkedList<Trade> responses = new LinkedList<>();
         for (StockHold myStock : myStocks) {
             // 股票的具体信息
             Stock stock = findStockByTicker(myStock.getTicker());
@@ -252,6 +248,66 @@ public class StockHoldServiceImpl implements StockHoldService {
             responses.addAll(trades);
         }
         return responses;
+    }
+
+    /**
+     * 查询持股价格变化
+     * @param request {登陆ID，查询时间段（默认近七天）}
+     * @return [{股票名称，股票代码，[股票价格]}]
+     */
+    @Override
+    public LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest request) {
+        // 1. 根据登陆Id查询所持有的所有股票
+        ArrayList<StockHold> myStocks = stockHoldRepo.findAllByAccountId(request.getAccountId());
+        if (myStocks == null || myStocks.size() == 0){
+            return null;
+        }
+        LinkedList<MyStockResponse> list = new LinkedList<>();
+        // 2. 获取时间限制，默认七天内
+        // 定义日期范围
+        // 获取当前时间
+        Date[] time = extractedTime(request);
+        if (time[0].getTime() > time[1].getTime()){
+            return null;
+        }
+
+        // 3. 获取时间范围内股票信息
+        LinkedList<GetStockTrendResponse> responses = new LinkedList<>();
+        for (StockHold myStock : myStocks) {
+            List<StockHis> stockHis = findStockHis(myStock.getTicker(), request.getStartTime(), request.getEndTime());
+            if (stockHis.size() == 0){
+                // 没有记录
+                continue;
+            }
+            GetStockTrendResponse response = new GetStockTrendResponse();
+            List<Double> prices = new LinkedList<>();
+            response.setName(myStock.getTicker());
+            response.setTicker(stockHis.get(0).getTicker());
+            for (StockHis stockHis0 : stockHis) {
+                prices.add(stockHis0.getCurrentPrice());
+            }
+            response.setPrices(prices);
+            responses.add(response);
+        }
+        return responses;
+    }
+
+
+
+    private Date[] extractedTime(TimeRequest request) {
+        Date[] time = new Date[2];
+        time[0] = new Date();
+        // 创建 Calendar 对象并设置为当前时间
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(time[0]);
+        // 将日期往前推7天
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        // 获取七天前的时间
+        time[1] = calendar.getTime();
+
+        time[0] = request.getStartTime() == null ? time[0]: request.getStartTime();// 设置开始时间
+        time[1] = request.getEndTime() == null ? time[1] : request.getEndTime();// 设置结束时间
+        return time;
     }
 
 
