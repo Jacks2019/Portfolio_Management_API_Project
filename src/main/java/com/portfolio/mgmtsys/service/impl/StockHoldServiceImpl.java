@@ -9,35 +9,36 @@ package com.portfolio.mgmtsys.service.impl;
 import com.portfolio.mgmtsys.domain.Assets;
 import com.portfolio.mgmtsys.domain.Stock;
 import com.portfolio.mgmtsys.domain.StockHold;
-import com.portfolio.mgmtsys.model.BuyStockRequest;
-import com.portfolio.mgmtsys.model.MyStockResponse;
-import com.portfolio.mgmtsys.model.SellStockRequest;
+import com.portfolio.mgmtsys.domain.Trade;
+import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.AssetsRepo;
 import com.portfolio.mgmtsys.repository.StockHoldRepo;
 import com.portfolio.mgmtsys.repository.StockRepo;
+import com.portfolio.mgmtsys.repository.TradeRepo;
 import com.portfolio.mgmtsys.service.StockHoldService;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import org.apache.coyote.Request;
+import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StockHoldServiceImpl implements StockHoldService {
 
     @Autowired
     StockRepo stockRepo;
-
     @Autowired
     StockHoldRepo stockHoldRepo;
-
     @Autowired
     AssetsRepo assetsRepo;
+    @Autowired
+    TradeRepo tradeRepo;
 
     private Stock findStockByTicker(String ticker){
         Stock stock = new Stock();
@@ -54,6 +55,24 @@ public class StockHoldServiceImpl implements StockHoldService {
         Example<StockHold> example = Example.of(stockHold);
         Optional<StockHold> optionalStock = stockHoldRepo.findOne(example);
         return optionalStock.orElse(null);
+    }
+
+    private List<Trade> findTradesByTickerAndAccount(String ticker, Integer accountId, Date startTime, Date endTime) {
+        Trade trade = new Trade();
+        trade.setAccountId(accountId);
+        trade.setTicker(ticker);
+        Example<Trade> example = Example.of(trade);
+        return tradeRepo.findAll(timeLimit(startTime, endTime,example));
+    }
+
+    private Specification<Trade> timeLimit(Date startTime, Date endTime, Example<Trade> example) {
+        return (Specification<Trade>) (root, query, builder) -> {
+            final List<Predicate> predicates = new ArrayList<>();
+            predicates.add(builder.greaterThan(root.get("time"), startTime));
+            predicates.add(builder.lessThan(root.get("time"),endTime));
+            predicates.add(QueryByExamplePredicateBuilder.getPredicate(root, builder, example));
+            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
+        };
     }
 
     /**
@@ -192,6 +211,47 @@ public class StockHoldServiceImpl implements StockHoldService {
         stockHoldRepo.save(stockHold);
 
        return false;
+    }
+
+    /**
+     *
+     * @param request {登陆ID，交易时间段（默认近七天）}
+     * @return [Trade：{操作类型，股票名字，股票代码，操作时价格，买入卖出数量，操作时间}]
+     */
+    @Override
+    public LinkedList<Trade> getTrades(GetTradesRequest request) {
+        LinkedList<Trade> responses = new LinkedList<>();
+        // 1. 获取stockhold
+        Integer accountId = request.getAccountId();
+        // 我的所有持股
+        ArrayList<StockHold> myStocks = stockHoldRepo.findAllByAccountId(accountId);
+        
+        // 2. 获取时间限制，默认七天内
+
+        // 定义日期范围
+        // 获取当前时间
+        Date startTime = new Date();
+        // 创建 Calendar 对象并设置为当前时间
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startTime);
+        // 将日期往前推7天
+        calendar.add(Calendar.DAY_OF_YEAR, -7);
+        // 获取七天前的时间
+        Date endTime = calendar.getTime();
+
+        startTime = request.getStartTime() == null ? startTime: request.getStartTime();// 设置开始时间
+        endTime = request.getEndTime() == null ? endTime : request.getEndTime();// 设置结束时间
+        if (startTime.getTime() > endTime.getTime()){
+            return null;
+        }
+
+        for (StockHold myStock : myStocks) {
+            // 股票的具体信息
+            Stock stock = findStockByTicker(myStock.getTicker());
+            List<Trade> trades = findTradesByTickerAndAccount(stock.getTicker(), request.getAccountId(),request.getStartTime(),request.getEndTime());
+            responses.addAll(trades);
+        }
+        return responses;
     }
 
 
