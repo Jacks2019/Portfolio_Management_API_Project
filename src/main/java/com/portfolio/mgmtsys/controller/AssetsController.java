@@ -40,9 +40,14 @@ public class AssetsController {
         return new ResponseEntity<Object>(assets, HttpStatus.ACCEPTED);
     }
 
-    @PostMapping("/transferin")
+    @PostMapping("/transferout")
     public ResponseEntity<Object> transferOut(@RequestBody Map<String, Object> request){
-        Assets assets = service.transferOut(request);
+        Assets assets = null;
+        try {
+            assets = service.transferOut(request);
+        } catch (Exception e) {
+            return new ResponseEntity<Object>("Not enough balance", HttpStatus.FORBIDDEN);
+        }
         if(assets==null){
             return new ResponseEntity<Object>("Account not found.", HttpStatus.NOT_FOUND);
         }

@@ -21,7 +21,8 @@ public class CheckBalanceAspect {
     AssetsRepo assetsRepo;
     
     @Before(value = "execution(* *..AssetsServiceImpl.transferOut(..))")
-    public void checkBalance(JoinPoint jp){
+    public void checkBalance(JoinPoint jp) throws Exception{
+        System.out.println("Aspect invoked.");
         Object[] args = jp.getArgs();
         Object request = args[0];
         Class<?> mapClazz = Map.class;
@@ -37,6 +38,8 @@ public class CheckBalanceAspect {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        assert balance >= amount;
+        if(balance < amount){
+            throw new Exception("Not enough balance.");
+        }
     }
 }

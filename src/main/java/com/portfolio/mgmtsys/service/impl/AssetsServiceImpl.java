@@ -42,6 +42,7 @@ public class AssetsServiceImpl implements AssetsService {
         }
         Assets assets = assetsOptional.get();
         assets.setBalance(assets.getBalance() + amount);
+        assets.setTotalAssets(assets.getBalance()+assets.getStockAssets());
         repo.save(assets);
 
         Transfer transfer = new Transfer();
@@ -64,6 +65,7 @@ public class AssetsServiceImpl implements AssetsService {
         }
         Assets assets = assetsOptional.get();
         assets.setBalance(assets.getBalance() - amount);
+        assets.setTotalAssets(assets.getBalance()+assets.getStockAssets());
         repo.save(assets);
 
         Transfer transfer = new Transfer();

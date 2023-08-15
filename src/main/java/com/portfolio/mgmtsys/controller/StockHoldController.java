@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 
 @RestController
-@RequestMapping("/stock")
+@RequestMapping("/stockhold")
 public class StockHoldController {
 
     StockHoldService service;
