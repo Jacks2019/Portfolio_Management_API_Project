@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.portfolio.mgmtsys.domain.Assets;
 import com.portfolio.mgmtsys.domain.Transfer;
@@ -13,6 +14,7 @@ import com.portfolio.mgmtsys.repository.AssetsRepo;
 import com.portfolio.mgmtsys.repository.TransferRepo;
 import com.portfolio.mgmtsys.service.AssetsService;
 
+@Service
 public class AssetsServiceImpl implements AssetsService {
 
     @Autowired
@@ -40,6 +42,7 @@ public class AssetsServiceImpl implements AssetsService {
         }
         Assets assets = assetsOptional.get();
         assets.setBalance(assets.getBalance() + amount);
+        assets.setTotalAssets(assets.getBalance()+assets.getStockAssets());
         repo.save(assets);
 
         Transfer transfer = new Transfer();
@@ -62,6 +65,7 @@ public class AssetsServiceImpl implements AssetsService {
         }
         Assets assets = assetsOptional.get();
         assets.setBalance(assets.getBalance() - amount);
+        assets.setTotalAssets(assets.getBalance()+assets.getStockAssets());
         repo.save(assets);
 
         Transfer transfer = new Transfer();
