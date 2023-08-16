@@ -29,4 +29,15 @@ public class FundHold {
 
     @Column(name = "amount")
     private Integer amount;
+
+    @Override
+    public String toString() {
+        return "FundHold{" +
+                "id=" + id +
+                ", accountId=" + accountId +
+                ", code='" + code + '\'' +
+                ", subscriptionPrice=" + subscriptionPrice +
+                ", amount=" + amount +
+                '}';
+    }
 }
