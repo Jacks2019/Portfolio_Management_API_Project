@@ -53,4 +53,14 @@ public class MyStockResponse extends Response {
     public void setCurrentPrice(Double currentPrice) {
         this.currentPrice = currentPrice;
     }
+
+    @Override
+    public String toString() {
+        return "MyStockResponse{" +
+                "stockName='" + stockName + '\'' +
+                ", ticker='" + ticker + '\'' +
+                ", amount=" + amount +
+                ", currentPrice=" + currentPrice +
+                '}';
+    }
 }

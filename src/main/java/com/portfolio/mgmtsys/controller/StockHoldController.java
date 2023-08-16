@@ -9,6 +9,7 @@ package com.portfolio.mgmtsys.controller;
 import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +20,16 @@ import java.util.LinkedList;
 @RequestMapping("/stockhold")
 public class StockHoldController {
 
+    @Autowired
     StockHoldService service;
 
-    @GetMapping("/getallstockhold")
-    public ResponseEntity<Object> getAllStockHold(@RequestBody Integer accountId){
+    @GetMapping("/getallstockhold/{accountId}")
+    public ResponseEntity<Object> getAllStockHold(@PathVariable Integer accountId) {
         LinkedList<MyStockResponse> allStockHold = service.getAllStockHold(accountId);
-        if (allStockHold != null){
+        if (allStockHold != null) {
             return new ResponseEntity<>(allStockHold, HttpStatus.ACCEPTED);
         }
-        return new ResponseEntity<Object>("No relevant information found.", HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
 
     @PostMapping("/buystock")

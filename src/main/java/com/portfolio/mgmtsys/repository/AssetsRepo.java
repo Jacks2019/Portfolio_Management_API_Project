@@ -8,6 +8,7 @@ package com.portfolio.mgmtsys.repository;
 
 import com.portfolio.mgmtsys.domain.Assets;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 public interface AssetsRepo extends JpaRepository<Assets,Integer>{
 
