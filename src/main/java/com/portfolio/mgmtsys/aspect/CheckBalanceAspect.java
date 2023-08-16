@@ -24,7 +24,7 @@ public class CheckBalanceAspect {
     public void checkBalance(JoinPoint jp) throws Exception{
         System.out.println("Aspect invoked.");
         Object[] args = jp.getArgs();
-        Object request = args[0];
+        Object request = args[0]; // get the map passing to transfer service
         Class<?> mapClazz = Map.class;
         Double amount = 1.0;
         Double balance = 0.0;
