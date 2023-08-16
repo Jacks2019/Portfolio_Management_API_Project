@@ -168,11 +168,11 @@ public class StockHoldServiceImpl implements StockHoldService {
         asset.setTotalAssets(10000.0);
 
         Assets save = assetsRepo.save(asset);
-//        StockHold save1 = stockHoldRepo.save(stockHold);
+        StockHold save1 = stockHoldRepo.save(stockHold);
         System.out.println("balance "+save.getBalance());
-//        System.out.println("amount "+save1.getAmount());
+        System.out.println("amount "+save1.getAmount());
         assetsRepo.flush();
-//        stockHoldRepo.flush();
+        stockHoldRepo.flush();
         return true;
     }
 

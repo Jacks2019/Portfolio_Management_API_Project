@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 
-@Service
+
 public interface StockHoldService {
 
     LinkedList<MyStockResponse> getAllStockHold(Integer accountId);
