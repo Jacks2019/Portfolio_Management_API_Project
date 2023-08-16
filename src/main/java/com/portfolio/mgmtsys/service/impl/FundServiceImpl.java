@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.data.domain.ExampleMatcher.GenericPropertyMatchers;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import com.portfolio.mgmtsys.domain.Fund;
@@ -21,8 +22,9 @@ public class FundServiceImpl implements FundService {
     private FundRepo repo;
 
     @Override
-    public List<Fund> getAllFunds() {
-        return repo.findAll();
+    public List<Fund> getAllFunds(Integer page, Integer pageSize) {
+        PageRequest pagination = PageRequest.of(page==null?0:page-1, pageSize==null?50:pageSize);
+        return repo.findAll(pagination).toList();
     }
 
     public List<Fund> searchFund(Map<String, Object> query){

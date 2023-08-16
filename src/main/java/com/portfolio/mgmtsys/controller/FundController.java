@@ -20,8 +20,8 @@ public class FundController {
     private FundService service;
 
     @GetMapping("/getallfunds")
-    public ResponseEntity<Object> getAllFunds() {
-        return new ResponseEntity<Object>(service.getAllFunds(), HttpStatus.FOUND);
+    public ResponseEntity<Object> getAllFunds(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize) {
+        return new ResponseEntity<Object>(service.getAllFunds(page, pageSize), HttpStatus.FOUND);
     }
 
     @GetMapping("/getfundbycode")
