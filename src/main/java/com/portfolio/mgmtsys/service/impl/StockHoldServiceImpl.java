@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -133,9 +134,6 @@ public class StockHoldServiceImpl implements StockHoldService {
         }
         // 1. 获取账户资金
         Assets asset = assetsRepo.getReferenceById(request.getAccountId());
-        if (asset == null){
-            return false;
-        }
 
         // 2. 获取股票价格
         Stock stock = findStockByTicker(request.getTicker());
@@ -153,6 +151,7 @@ public class StockHoldServiceImpl implements StockHoldService {
 
         // 4. 查找stockHold表
         StockHold stockHold = findStockHoldByTickerAndAccount(request.getTicker(), request.getAccountId());
+
         if (stockHold == null){
             // 新建stokHold
             stockHold = new StockHold();
@@ -161,13 +160,20 @@ public class StockHoldServiceImpl implements StockHoldService {
             stockHold.setTicker(request.getTicker());
             stockHold.setAmount(0);
         }
+        System.out.println("ticker: "+stockHold.getTicker());
         // 5. 修改StockHold表和Assets表
         stockHold.setAmount(stockHold.getAmount()+request.getAmount());
         asset.setBalance(now);
+        asset.setStockAssets(0.0);
+        asset.setTotalAssets(10000.0);
 
-        assetsRepo.save(asset);
-        stockHoldRepo.save(stockHold);
-        return false;
+        Assets save = assetsRepo.save(asset);
+//        StockHold save1 = stockHoldRepo.save(stockHold);
+        System.out.println("balance "+save.getBalance());
+//        System.out.println("amount "+save1.getAmount());
+        assetsRepo.flush();
+//        stockHoldRepo.flush();
+        return true;
     }
 
     /**
