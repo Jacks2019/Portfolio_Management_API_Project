@@ -22,4 +22,6 @@ public interface StockHoldService {
     boolean sellStock(SellStockRequest request);
 
     LinkedList<Trade> getTrades(GetTradesRequest request);
+
+    LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest request);
 }

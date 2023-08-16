@@ -48,9 +48,18 @@ public class StockHoldController {
 
     @GetMapping("/gettrades")
     public ResponseEntity<Object> getTrades(@RequestBody GetTradesRequest request){
-        LinkedList<Trade> response = service.getTrades(request);
-        return response == null ?
+        LinkedList<Trade> responses = service.getTrades(request);
+        return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
-                new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+                new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/getallstockholdtrend")
+    public ResponseEntity<Object> getAllStockHoldTrend(@RequestBody GetStockTrendRequest request){
+        LinkedList<GetStockTrendResponse> responses = service.getAllStockHoldTrend(request);
+        return responses == null ?
+                new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
+                new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
+    }
+
 }

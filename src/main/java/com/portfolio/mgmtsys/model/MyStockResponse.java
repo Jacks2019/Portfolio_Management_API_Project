@@ -6,7 +6,7 @@ package com.portfolio.mgmtsys.model;
  * Description:
  */
 
-public class MyStockResponse {
+public class MyStockResponse extends Response {
     private String stockName;
 
     private String ticker;

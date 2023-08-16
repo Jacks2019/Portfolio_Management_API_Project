@@ -6,7 +6,7 @@ package com.portfolio.mgmtsys.model;
  * Description:
  */
 
-public class BuyStockRequest {
+public class BuyStockRequest extends Request{
     private Integer accountId;
 
     private String ticker;

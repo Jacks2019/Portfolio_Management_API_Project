@@ -8,7 +8,7 @@ package com.portfolio.mgmtsys.model;
 
 import java.util.Date;
 
-public class GetTradesRequest extends TimeRequest {
+public class GetStockTrendRequest  extends TimeRequest{
    //    登陆ID，交易时间段（默认近七天）
    private Integer accountId;
 
@@ -20,5 +20,5 @@ public class GetTradesRequest extends TimeRequest {
    public void setAccountId(Integer accountId) {
       this.accountId = accountId;
    }
-}
 
+}
