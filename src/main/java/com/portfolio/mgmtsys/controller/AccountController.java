@@ -12,6 +12,7 @@ import com.portfolio.mgmtsys.domain.Account;
 import com.portfolio.mgmtsys.service.AccountService;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/account")
 public class AccountController {
     

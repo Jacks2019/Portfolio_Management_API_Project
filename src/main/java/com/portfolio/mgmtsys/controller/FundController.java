@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.portfolio.mgmtsys.domain.Fund;
 import com.portfolio.mgmtsys.service.FundService;
+
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
+@CrossOrigin
 @RequestMapping("/fund")
 public class FundController {
     

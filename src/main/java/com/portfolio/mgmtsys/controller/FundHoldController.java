@@ -20,6 +20,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/fundhold")
 public class FundHoldController {
 
