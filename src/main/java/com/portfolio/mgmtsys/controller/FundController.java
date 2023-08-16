@@ -30,7 +30,7 @@ public class FundController {
         return new ResponseEntity<Object>(service.getAllFunds(page, pageSize), HttpStatus.FOUND);
     }
 
-    @GetMapping("/getallfunds")
+    @GetMapping("/searchfund")
     public ResponseEntity<Object> searchFund(@RequestParam(required = false) Map<String, Object> query) {
         List<Fund> funds = service.searchFund(query);
         if(funds.size()<=0){
