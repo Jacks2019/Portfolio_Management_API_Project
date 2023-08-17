@@ -20,5 +20,14 @@ public class GetTradesRequest extends TimeRequest {
    public void setAccountId(Integer accountId) {
       this.accountId = accountId;
    }
+
+   @Override
+   public String toString() {
+      return "GetTradesRequest{" +
+              "accountId=" + accountId +
+              ", startTime=" + startTime +
+              ", endTime=" + endTime +
+              '}';
+   }
 }
 

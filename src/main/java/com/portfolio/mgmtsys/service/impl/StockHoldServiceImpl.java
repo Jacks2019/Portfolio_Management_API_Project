@@ -19,6 +19,7 @@ import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -58,7 +59,7 @@ public class StockHoldServiceImpl implements StockHoldService {
         trade.setAccountId(accountId);
         trade.setTicker(ticker);
         Example<Trade> example = Example.of(trade);
-        Specification<Trade> tradeSpecification = timeLimit(startTime, endTime, example);
+        Specification<Trade> tradeSpecification = TimeUtil.timeLimit(startTime, endTime, example);
         return tradeRepo.findAll(tradeSpecification);
     }
 
@@ -66,19 +67,11 @@ public class StockHoldServiceImpl implements StockHoldService {
         StockHis stockHis = new StockHis();
         stockHis.setTicker(ticker);
         Example<StockHis> example = Example.of(stockHis);
-        Specification<StockHis> stockHisSpecification = timeLimit(startTime, endTime, example);
+        Specification<StockHis> stockHisSpecification = TimeUtil.timeLimit(startTime, endTime, example);
         return stockHisRepo.findAll(stockHisSpecification);
     }
 
-    private <T> Specification<T> timeLimit(Date startTime, Date endTime, Example<T> example) {
-        return (Specification<T>) (root, query, builder) -> {
-            final List<Predicate> predicates = new ArrayList<>();
-            predicates.add(builder.greaterThan(root.get("time"), startTime));
-            predicates.add(builder.lessThan(root.get("time"),endTime));
-            predicates.add(QueryByExamplePredicateBuilder.getPredicate(root, builder, example));
-            return builder.and(predicates.toArray(new Predicate[predicates.size()]));
-        };
-    }
+
 
     /**
      * 通过登陆ID查找持有股票信息，涉及Stock表和StockHold表
@@ -171,12 +164,8 @@ public class StockHoldServiceImpl implements StockHoldService {
         stockHold.setAmount(stockHold.getAmount()+request.getAmount());
         asset.setBalance(now);
 
-        Assets save = assetsRepo.save(asset);
-        StockHold save1 = stockHoldRepo.save(stockHold);
-        System.out.println("balance "+save.getBalance());
-        System.out.println("amount "+save1.getAmount());
-        assetsRepo.flush();
-        stockHoldRepo.flush();
+        assetsRepo.save(asset);
+        stockHoldRepo.save(stockHold);
 
         return true;
     }
@@ -247,22 +236,38 @@ public class StockHoldServiceImpl implements StockHoldService {
         Integer accountId = request.getAccountId();
         // 我的所有持股
         ArrayList<StockHold> myStocks = stockHoldRepo.findAllByAccountId(accountId);
-        
+        if (myStocks == null || myStocks.size() == 0){
+            return null;
+        }
+
         // 2. 获取时间限制，默认七天内
         // 定义日期范围
         // 获取当前时间
-        Date[] time = extractedTime(request);
-        if (time[0].getTime() > time[1].getTime()){
+        Date[] time = TimeUtil.extractedTime(request);
+//        System.out.println(request);
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//        System.out.println(dateFormat.format(time[0]));
+//        System.out.println(dateFormat.format(time[1]));
+
+        if (time[0].after(time[1])){
             return null;
         }
 
         LinkedList<Trade> responses = new LinkedList<>();
+
         for (StockHold myStock : myStocks) {
             // 股票的具体信息
-            Stock stock = findStockByTicker(myStock.getTicker());
-            List<Trade> trades = findTradesByTickerAndAccount(stock.getTicker(), request.getAccountId(),request.getStartTime(),request.getEndTime());
+            Stock stock = stockRepo.findById(myStock.getTicker()).orElse(null);
+//                    findStockByTicker(myStock.getTicker());
+            if (stock == null){
+                continue;
+            }
+            List<Trade> trades = findTradesByTickerAndAccount(stock.getTicker(), request.getAccountId(),time[0],time[1]);
             responses.addAll(trades);
         }
+
         return responses;
     }
 
@@ -282,15 +287,15 @@ public class StockHoldServiceImpl implements StockHoldService {
         // 2. 获取时间限制，默认七天内
         // 定义日期范围
         // 获取当前时间
-        Date[] time = extractedTime(request);
-        if (time[0].getTime() > time[1].getTime()){
+        Date[] time = TimeUtil.extractedTime(request);
+        if (time[0].after(time[1])){
             return null;
         }
 
         // 3. 获取时间范围内股票信息
         LinkedList<GetStockTrendResponse> responses = new LinkedList<>();
         for (StockHold myStock : myStocks) {
-            List<StockHis> stockHis = findStockHis(myStock.getTicker(), request.getStartTime(), request.getEndTime());
+            List<StockHis> stockHis = findStockHis(myStock.getTicker(), time[0], time[1]);
             if (stockHis.size() == 0){
                 // 没有记录
                 continue;
@@ -310,21 +315,7 @@ public class StockHoldServiceImpl implements StockHoldService {
 
 
 
-    private Date[] extractedTime(TimeRequest request) {
-        Date[] time = new Date[2];
-        time[0] = new Date();
-        // 创建 Calendar 对象并设置为当前时间
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(time[0]);
-        // 将日期往前推7天
-        calendar.add(Calendar.DAY_OF_YEAR, -7);
-        // 获取七天前的时间
-        time[1] = calendar.getTime();
 
-        time[0] = request.getStartTime() == null ? time[0]: request.getStartTime();// 设置开始时间
-        time[1] = request.getEndTime() == null ? time[1] : request.getEndTime();// 设置结束时间
-        return time;
-    }
 
 
 }

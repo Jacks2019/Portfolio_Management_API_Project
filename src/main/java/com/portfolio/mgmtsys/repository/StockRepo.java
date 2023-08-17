@@ -9,6 +9,6 @@ package com.portfolio.mgmtsys.repository;
 import com.portfolio.mgmtsys.domain.Stock;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface StockRepo extends JpaRepository<Stock,Integer>{
+public interface StockRepo extends JpaRepository<Stock,String>{
 
 }
