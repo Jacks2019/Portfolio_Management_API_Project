@@ -24,12 +24,12 @@ public class StockController {
     @Autowired
     private StockService service;
 
-    @GetMapping("/getAllStocks")
+    @GetMapping("/getallstocks")
     public ResponseEntity<Object> getAllStocks(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize){
         return new ResponseEntity<Object>(service.getAllStocks(page, pageSize), HttpStatus.FOUND);
     }
 
-    @GetMapping("/searchStock")
+    @GetMapping("/searchstock")
     public ResponseEntity<Object> searchStock(@RequestParam(required = false) Map<String, Object> searchMap){
         List<Stock> stocks = service.searchStock(searchMap);
         if(stocks.size()>0){
@@ -38,7 +38,7 @@ public class StockController {
         return new ResponseEntity<Object>("No stock found.", HttpStatus.NOT_FOUND);
     }
     
-    @GetMapping("/getStockByTicker/{ticker}")
+    @GetMapping("/getstockbyticker/{ticker}")
     public ResponseEntity<Object> getStockByTicker(@PathVariable String ticker){
         Stock stock = service.getStockByTicker(ticker);
         if(stock!=null){
