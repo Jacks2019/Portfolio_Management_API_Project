@@ -22,4 +22,7 @@ public class Assets {
 
     @Column(name = "balance")
     private Double balance;
+
+    @Column(name = "fund_assets")
+    private Double fundAssets;
 }

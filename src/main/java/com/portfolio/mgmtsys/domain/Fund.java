@@ -34,4 +34,12 @@ public class Fund{
 
     @Column(name = "redemption")
     private String redemption;
+
+    public Fund(){
+
+    }
+
+    public Fund(String code) {
+        this.code = code;
+    }
 }
