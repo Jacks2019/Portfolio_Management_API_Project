@@ -6,9 +6,7 @@ package com.portfolio.mgmtsys.model;
  * Description:
  */
 
-import java.util.Date;
-
-public class GetStockTrendRequest  extends TimeRequest{
+public class GetTrendRequest extends TimeRequest{
    //    登陆ID，交易时间段（默认近七天）
    private Integer accountId;
 

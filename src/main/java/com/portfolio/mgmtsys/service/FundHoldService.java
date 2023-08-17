@@ -9,7 +9,9 @@ package com.portfolio.mgmtsys.service;
 import com.portfolio.mgmtsys.domain.FundHold;
 import com.portfolio.mgmtsys.domain.FundTrade;
 import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
+import com.portfolio.mgmtsys.model.GetFundTrendResponse;
 import com.portfolio.mgmtsys.model.GetTradesRequest;
+import com.portfolio.mgmtsys.model.GetTrendRequest;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,4 +24,6 @@ public interface FundHoldService {
     boolean sellFund(BuyAndSellFundRequest request);
 
     LinkedList<FundTrade> getTrades(GetTradesRequest request);
+
+    LinkedList<GetFundTrendResponse> getAllFundHoldTrend(GetTrendRequest request);
 }

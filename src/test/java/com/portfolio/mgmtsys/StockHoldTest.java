@@ -415,6 +415,46 @@ public class StockHoldTest {
         for (GetStockTrendResponse stockTrendRespons : stockTrendResponses) {
             System.out.println(stockTrendRespons);
         }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetStockTrend() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 15));;
+        request.setEndTime(TimeUtil.getNowTime());
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<GetStockTrendResponse> stockTrendResponses = objectMapper.readValue(responseContent, new TypeReference<LinkedList<GetStockTrendResponse>>() {});
+        for (GetStockTrendResponse stockTrendRespons : stockTrendResponses) {
+            System.out.println(stockTrendRespons);
+        }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetStockTrendFail() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 17));;
+        request.setEndTime(new Date(123, 7, 16));
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
 
     }
 }

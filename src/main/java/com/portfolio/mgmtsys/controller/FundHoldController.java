@@ -59,5 +59,13 @@ public class FundHoldController {
                 new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/getallfundholdtrend")
+    public ResponseEntity<Object> getAllStockHoldTrend(@RequestBody GetTrendRequest request){
+        LinkedList<GetFundTrendResponse> responses = service.getAllFundHoldTrend(request);
+        return responses == null ?
+                new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
+                new ResponseEntity<>(responses, HttpStatus.OK);
+    }
+
 
 }

@@ -12,14 +12,11 @@ import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
 import com.portfolio.mgmtsys.utils.TimeUtil;
-import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
@@ -277,7 +274,7 @@ public class StockHoldServiceImpl implements StockHoldService {
      * @return [{股票名称，股票代码，[股票价格]}]
      */
     @Override
-    public LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest request) {
+    public LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetTrendRequest request) {
         // 1. 根据登陆Id查询所持有的所有股票
         if (request == null){
             return null;
@@ -295,13 +292,13 @@ public class StockHoldServiceImpl implements StockHoldService {
         if (time[0].after(time[1])){
             return null;
         }
-        for (StockHold myStock : myStocks) {
-            List<StockHis> all = stockHisRepo.findAll(Example.of(new StockHis(myStock.getTicker())));
-            for (StockHis stockHis : all) {
-                System.out.println(stockHis);
-            }
-            System.out.println("=====");
-        }
+//        for (StockHold myStock : myStocks) {
+//            List<StockHis> all = stockHisRepo.findAll(Example.of(new StockHis(myStock.getTicker())));
+//            for (StockHis stockHis : all) {
+//                System.out.println(stockHis);
+//            }
+//            System.out.println("=====");
+//        }
 
         // 3. 获取时间范围内股票信息
         LinkedList<GetStockTrendResponse> responses = new LinkedList<>();
