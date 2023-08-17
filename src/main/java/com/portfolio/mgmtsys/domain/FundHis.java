@@ -23,7 +23,7 @@ public class FundHis{
     @Column(name = "code")
     private String code;
 
-    @Column(name = "date")
+    @Column(name = "time")
     private Date time;
 
     @Column(name = "unit_net")
