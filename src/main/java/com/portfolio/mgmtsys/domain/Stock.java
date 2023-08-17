@@ -20,8 +20,8 @@ public class Stock {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "date")
-    private Date date;
+    @Column(name = "time")
+    private Date time;
 
     @Column(name = "current_price")
     private Double currentPrice;

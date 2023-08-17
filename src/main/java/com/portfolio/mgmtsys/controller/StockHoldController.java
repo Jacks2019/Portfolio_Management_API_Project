@@ -59,7 +59,7 @@ public class StockHoldController {
     }
 
     @GetMapping("/getallstockholdtrend")
-    public ResponseEntity<Object> getAllStockHoldTrend(@RequestBody GetStockTrendRequest request){
+    public ResponseEntity<Object> getAllStockHoldTrend(@RequestBody GetTrendRequest request){
         LinkedList<GetStockTrendResponse> responses = service.getAllStockHoldTrend(request);
         return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :

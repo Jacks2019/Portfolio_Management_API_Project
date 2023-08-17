@@ -45,9 +45,9 @@ public class TimeUtil {
     }
 
     public static  <T> Specification<T> timeLimit(Date startTime, Date endTime, Example<T> example) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        System.out.println(dateFormat.format(startTime));
-        System.out.println(dateFormat.format(endTime));
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        System.out.println(dateFormat.format(startTime));
+//        System.out.println(dateFormat.format(endTime));
         return (Specification<T>) (root, query, builder) -> {
             final List<Predicate> predicates = new ArrayList<>();
             predicates.add(builder.greaterThan(root.get("time"), startTime));

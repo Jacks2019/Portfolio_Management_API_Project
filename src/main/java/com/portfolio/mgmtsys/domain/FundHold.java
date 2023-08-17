@@ -34,6 +34,10 @@ public class FundHold {
         this.accountId = accountId;
         this.code = code;
     }
+    public FundHold(Integer accountId) {
+        this.accountId = accountId;
+
+    }
 
     public FundHold(){
 

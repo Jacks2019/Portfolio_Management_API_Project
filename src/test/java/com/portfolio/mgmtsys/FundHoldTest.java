@@ -10,9 +10,7 @@ import com.portfolio.mgmtsys.domain.Fund;
 import com.portfolio.mgmtsys.domain.FundHold;
 import com.portfolio.mgmtsys.domain.FundTrade;
 import com.portfolio.mgmtsys.domain.Trade;
-import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
-import com.portfolio.mgmtsys.model.BuyAndSellStockRequest;
-import com.portfolio.mgmtsys.model.GetTradesRequest;
+import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import jakarta.transaction.Transactional;
 import org.junit.Before;
@@ -375,6 +373,66 @@ public class FundHoldTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(print())
                 .andReturn();
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTrendDefaultTime() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/getallfundholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<GetFundTrendResponse> fundTrendResponses = objectMapper.readValue(responseContent, new TypeReference<LinkedList<GetFundTrendResponse>>() {});
+        for (GetFundTrendResponse fundTrendResponse : fundTrendResponses) {
+            System.out.println(fundTrendResponse);
+        }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTrend() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 1));;
+        request.setEndTime(TimeUtil.getNowTime());
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/getallfundholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<GetFundTrendResponse> fundTrendResponses = objectMapper.readValue(responseContent, new TypeReference<LinkedList<GetFundTrendResponse>>() {});
+        for (GetFundTrendResponse fundTrendResponse : fundTrendResponses) {
+            System.out.println(fundTrendResponse);
+        }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTrendFail() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 17));;
+        request.setEndTime(new Date(123, 7, 16));
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/getallfundholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
 
     }
 }
