@@ -7,10 +7,14 @@ package com.portfolio.mgmtsys.service;
  */
 
 import com.portfolio.mgmtsys.domain.FundHold;
+import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public interface FundHoldService {
     List<FundHold> getAllFundHold(Integer accountId);
+
+    boolean buyFund(BuyAndSellFundRequest request);
+
+    boolean sellFund(BuyAndSellFundRequest request);
 }

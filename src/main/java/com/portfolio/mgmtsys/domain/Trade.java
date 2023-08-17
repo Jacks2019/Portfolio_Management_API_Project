@@ -42,5 +42,16 @@ public class Trade {
 
     @Column(name = "amount")
     private Integer amount;
-    
+
+    public Trade(){
+
+    }
+    public Trade(Integer accountId, String ticker, TradeType type, Date time, Double price, Integer amount) {
+        this.accountId = accountId;
+        this.ticker = ticker;
+        this.type = type;
+        this.time = time;
+        this.price = price;
+        this.amount = amount;
+    }
 }

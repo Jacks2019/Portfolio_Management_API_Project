@@ -6,10 +6,10 @@ package com.portfolio.mgmtsys.model;
  * Description:
  */
 
-public class BuyStockRequest extends Request{
+public class BuyAndSellFundRequest extends Request{
     private Integer accountId;
 
-    private String ticker;
+    private String code;
 
     private Integer amount;
 
@@ -21,12 +21,12 @@ public class BuyStockRequest extends Request{
         this.accountId = accountId;
     }
 
-    public String getTicker() {
-        return ticker;
+    public String getCode() {
+        return code;
     }
 
-    public void setTicker(String ticker) {
-        this.ticker = ticker;
+    public void setCode(String code) {
+        this.code = code;
     }
 
     public Integer getAmount() {
@@ -35,5 +35,14 @@ public class BuyStockRequest extends Request{
 
     public void setAmount(Integer amount) {
         this.amount = amount;
+    }
+
+    @Override
+    public String toString() {
+        return "BuyFundRequest{" +
+                "accountId=" + accountId +
+                ", code='" + code + '\'' +
+                ", amount=" + amount +
+                '}';
     }
 }

@@ -30,6 +30,15 @@ public class FundHold {
     @Column(name = "amount")
     private Integer amount;
 
+    public FundHold(Integer accountId, String code) {
+        this.accountId = accountId;
+        this.code = code;
+    }
+
+    public FundHold(){
+
+    }
+
     @Override
     public String toString() {
         return "FundHold{" +

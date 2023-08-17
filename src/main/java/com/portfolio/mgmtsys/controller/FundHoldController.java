@@ -7,16 +7,13 @@ package com.portfolio.mgmtsys.controller;
  */
 
 import com.portfolio.mgmtsys.domain.FundHold;
-import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.service.FundHoldService;
-import com.portfolio.mgmtsys.service.StockHoldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -34,6 +31,22 @@ public class FundHoldController {
             return new ResponseEntity<>(allFundHold, HttpStatus.ACCEPTED);
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
+    }
+
+    @PostMapping("/buyfund")
+    public ResponseEntity<Object> buyFund(@RequestBody BuyAndSellFundRequest request){
+        boolean buystock = service.buyFund(request);
+        return buystock ?
+                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+    }
+
+    @PostMapping("/sellfund")
+    public ResponseEntity<Object> sellFund(@RequestBody BuyAndSellFundRequest request){
+        boolean buystock = service.sellFund(request);
+        return buystock ?
+                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
 

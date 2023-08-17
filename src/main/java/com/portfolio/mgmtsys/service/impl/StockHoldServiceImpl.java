@@ -7,18 +7,16 @@ package com.portfolio.mgmtsys.service.impl;
  */
 
 import com.portfolio.mgmtsys.domain.*;
+import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
+import com.portfolio.mgmtsys.utils.TimeUtil;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.convert.QueryByExamplePredicateBuilder;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -122,7 +120,7 @@ public class StockHoldServiceImpl implements StockHoldService {
      * @return 购买是否成功
      */
     @Override
-    public boolean buyStock(BuyStockRequest request) {
+    public boolean buyStock(BuyAndSellStockRequest request) {
         if (request == null
                 || request.getAccountId() == null
                 || request.getAmount() == null
@@ -133,7 +131,10 @@ public class StockHoldServiceImpl implements StockHoldService {
             return false;
         }
         // 1. 获取账户资金
-        Assets asset = assetsRepo.getReferenceById(request.getAccountId());
+        Assets asset = assetsRepo.findById(request.getAccountId()).orElse(null);
+        if (asset == null){
+            return false;
+        }
 
         // 2. 获取股票价格
         Stock stock = findStockByTicker(request.getTicker());
@@ -155,17 +156,20 @@ public class StockHoldServiceImpl implements StockHoldService {
         if (stockHold == null){
             // 新建stokHold
             stockHold = new StockHold();
-            stockHold.setAmount(request.getAmount());
+            stockHold.setAccountId(request.getAccountId());
             stockHold.setCallPrice(stock.getCurrentPrice());
             stockHold.setTicker(request.getTicker());
             stockHold.setAmount(0);
         }
         System.out.println("ticker: "+stockHold.getTicker());
-        // 5. 修改StockHold表和Assets表
+        // 5. 修改tradde表
+        Date time = TimeUtil.getNowTime();
+
+        Trade trade = new Trade(request.getAccountId(), request.getTicker(),TradeType.BUY, time, currentPrice, request.getAmount());
+        tradeRepo.save(trade);
+        // 6. 修改StockHold表和Assets表
         stockHold.setAmount(stockHold.getAmount()+request.getAmount());
         asset.setBalance(now);
-        asset.setStockAssets(0.0);
-        asset.setTotalAssets(10000.0);
 
         Assets save = assetsRepo.save(asset);
         StockHold save1 = stockHoldRepo.save(stockHold);
@@ -173,6 +177,7 @@ public class StockHoldServiceImpl implements StockHoldService {
         System.out.println("amount "+save1.getAmount());
         assetsRepo.flush();
         stockHoldRepo.flush();
+
         return true;
     }
 
@@ -182,7 +187,7 @@ public class StockHoldServiceImpl implements StockHoldService {
      * @return 售卖是否成功
      */
     @Override
-    public boolean sellStock(SellStockRequest request) {
+    public boolean sellStock(BuyAndSellStockRequest request) {
         if (request == null
                 || request.getAccountId() == null
                 || request.getAmount() == null
@@ -192,7 +197,7 @@ public class StockHoldServiceImpl implements StockHoldService {
             return false;
         }
         // 1. 获取账户资金
-        Assets asset = assetsRepo.getReferenceById(request.getAccountId());
+        Assets asset = assetsRepo.findById(request.getAccountId()).orElse(null);
         if (asset == null){
             return false;
         }
@@ -215,14 +220,19 @@ public class StockHoldServiceImpl implements StockHoldService {
             return false;
         }
 
-        // 5. 修改StockHold表和Assets表
+        // 5. 修改tradde表
+        Date time = TimeUtil.getNowTime();
+        Trade trade = new Trade(request.getAccountId(), request.getTicker(),TradeType.SELL, time, currentPrice, request.getAmount());
+        tradeRepo.save(trade);
+
+        // 6. 修改StockHold表和Assets表
         stockHold.setAmount(stockHold.getAmount() - request.getAmount());
         Double now = asset.getBalance() + currentPrice * request.getAmount();
         asset.setBalance(now);
         assetsRepo.save(asset);
         stockHoldRepo.save(stockHold);
 
-       return false;
+       return true;
     }
 
     /**
