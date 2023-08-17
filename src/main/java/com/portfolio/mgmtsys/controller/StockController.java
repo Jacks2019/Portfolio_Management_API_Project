@@ -26,14 +26,14 @@ public class StockController {
 
     @GetMapping("/getallstocks")
     public ResponseEntity<Object> getAllStocks(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize){
-        return new ResponseEntity<Object>(service.getAllStocks(page, pageSize), HttpStatus.FOUND);
+        return new ResponseEntity<Object>(service.getAllStocks(page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/searchstock")
     public ResponseEntity<Object> searchStock(@RequestParam(required = false) Map<String, Object> searchMap){
         List<Stock> stocks = service.searchStock(searchMap);
         if(stocks.size()>0){
-            return new ResponseEntity<Object>(stocks, HttpStatus.FOUND);
+            return new ResponseEntity<Object>(stocks, HttpStatus.OK);
         }
         return new ResponseEntity<Object>("No stock found.", HttpStatus.NOT_FOUND);
     }
@@ -42,7 +42,7 @@ public class StockController {
     public ResponseEntity<Object> getStockByTicker(@PathVariable String ticker){
         Stock stock = service.getStockByTicker(ticker);
         if(stock!=null){
-            return new ResponseEntity<Object>(stock, HttpStatus.FOUND);
+            return new ResponseEntity<Object>(stock, HttpStatus.OK);
         }
         return new ResponseEntity<Object>("No stock with this ticker is found.", HttpStatus.NOT_FOUND);
     }

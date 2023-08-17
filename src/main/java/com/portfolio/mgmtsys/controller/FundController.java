@@ -27,7 +27,7 @@ public class FundController {
 
     @GetMapping("/getallfunds")
     public ResponseEntity<Object> getAllFunds(@RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize) {
-        return new ResponseEntity<Object>(service.getAllFunds(page, pageSize), HttpStatus.FOUND);
+        return new ResponseEntity<Object>(service.getAllFunds(page, pageSize), HttpStatus.OK);
     }
 
     @GetMapping("/searchfund")
@@ -36,7 +36,7 @@ public class FundController {
         if(funds.size()<=0){
             return new ResponseEntity<Object>("No fund found.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Object>(funds, HttpStatus.FOUND);
+        return new ResponseEntity<Object>(funds, HttpStatus.OK);
     }
 
     @GetMapping("/getfundbycode")
@@ -45,7 +45,7 @@ public class FundController {
         if(fund==null){
             return new ResponseEntity<Object>("No fund with this code found.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Object>(fund, HttpStatus.FOUND);
+        return new ResponseEntity<Object>(fund, HttpStatus.OK);
     }
     
 }

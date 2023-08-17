@@ -25,7 +25,7 @@ public class AccountController {
         if(accountId!=null){
             Map<String, Object> body = new HashMap<>();
             body.put("id", accountId);
-            return new ResponseEntity<Object>(body, HttpStatus.ACCEPTED);
+            return new ResponseEntity<Object>(body, HttpStatus.OK);
         }
         return new ResponseEntity<Object>("Account name or password may be incorrect.", HttpStatus.UNAUTHORIZED);
     }
@@ -34,7 +34,7 @@ public class AccountController {
     public ResponseEntity<Object> register(@RequestBody Account account){
         Account registeredAccount = service.register(account);
         if(registeredAccount!=null){
-            return new ResponseEntity<Object>(registeredAccount, HttpStatus.ACCEPTED);
+            return new ResponseEntity<Object>(registeredAccount, HttpStatus.OK);
         }
         return new ResponseEntity<Object>("Account name may already exist.", HttpStatus.CONFLICT);
     }
