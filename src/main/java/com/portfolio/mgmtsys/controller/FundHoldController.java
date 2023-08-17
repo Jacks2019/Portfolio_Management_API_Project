@@ -7,6 +7,7 @@ package com.portfolio.mgmtsys.controller;
  */
 
 import com.portfolio.mgmtsys.domain.FundHold;
+import com.portfolio.mgmtsys.domain.FundTrade;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.service.FundHoldService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RestController
@@ -47,6 +49,14 @@ public class FundHoldController {
         return buystock ?
                 new ResponseEntity<>(true, HttpStatus.ACCEPTED):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
+    }
+
+    @GetMapping("/gettrades")
+    public ResponseEntity<Object> sellFund(@RequestBody GetTradesRequest request){
+       LinkedList<FundTrade> response= service.getTrades(request);
+        return response == null?
+                new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED):
+                new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
 

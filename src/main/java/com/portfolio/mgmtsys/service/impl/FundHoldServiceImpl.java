@@ -10,6 +10,7 @@ import com.portfolio.mgmtsys.domain.*;
 import com.portfolio.mgmtsys.enumeration.FundTradeType;
 import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
+import com.portfolio.mgmtsys.model.GetTradesRequest;
 import com.portfolio.mgmtsys.repository.AssetsRepo;
 import com.portfolio.mgmtsys.repository.FundHoldRepo;
 import com.portfolio.mgmtsys.repository.FundRepo;
@@ -18,9 +19,13 @@ import com.portfolio.mgmtsys.service.FundHoldService;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 @Service
@@ -150,5 +155,57 @@ public class FundHoldServiceImpl implements FundHoldService {
         assetsRepo.save(asset);
         fundHoldRepo.save(fundHold);
         return true;
+    }
+
+    /**
+     * 查询基金交易记录：/fundhold/gettrades
+     * @param request 登陆ID，交易时间段（默认近七天）
+     * @return [FundTrade：{操作类型，基金名字，基金代码，操作时价格，买入卖出数量，操作时间}]
+     */
+    @Override
+    public LinkedList<FundTrade> getTrades(GetTradesRequest request) {
+
+        // 1. 获取fundhold
+        Integer accountId = request.getAccountId();
+        // 我的所有基金
+        ArrayList<FundHold> myFunds = fundHoldRepo.findAllByAccountId(accountId);
+        if (myFunds == null || myFunds.size() == 0){
+            return null;
+        }
+
+        // 2. 获取时间限制，默认七天内
+        // 定义日期范围
+        // 获取当前时间
+        Date[] time = TimeUtil.extractedTime(request);
+//        System.out.println(request);
+
+//        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//
+//        System.out.println(dateFormat.format(time[0]));
+//        System.out.println(dateFormat.format(time[1]));
+        if (time[0].after(time[1])){
+            return null;
+        }
+
+        LinkedList<FundTrade> responses = new LinkedList<>();
+        for (FundHold myFund : myFunds) {
+            Fund fund = fundRepo.findById(myFund.getCode()).orElse(null);
+            if (fund == null){
+                continue;
+            }
+            List<FundTrade> trades = findTradesByCodeAndAccount(fund.getCode(), request.getAccountId(),time[0], time[1]);
+            responses.addAll(trades);
+        }
+
+        return responses;
+    }
+
+    private List<FundTrade> findTradesByCodeAndAccount(String code, Integer accountId, Date startTime, Date endTime) {
+        FundTrade trade = new FundTrade();
+        trade.setAccountId(accountId);
+        trade.setCode(code);
+        Example<FundTrade> example = Example.of(trade);
+        Specification<FundTrade> tradeSpecification = TimeUtil.timeLimit(startTime, endTime, example);
+        return fundTradeRepo.findAll(tradeSpecification);
     }
 }

@@ -6,9 +6,14 @@ package com.portfolio.mgmtsys;
  * Description:
  */
 
+import com.portfolio.mgmtsys.domain.Fund;
 import com.portfolio.mgmtsys.domain.FundHold;
+import com.portfolio.mgmtsys.domain.FundTrade;
+import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
 import com.portfolio.mgmtsys.model.BuyAndSellStockRequest;
+import com.portfolio.mgmtsys.model.GetTradesRequest;
+import com.portfolio.mgmtsys.utils.TimeUtil;
 import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -27,6 +32,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -296,7 +302,7 @@ public class FundHoldTest {
         request.setAmount(999999);
 
         // 模拟请求并验证响应
-        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+        MvcResult result = mockMvc.perform(post("/fundhold/sellfund")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
@@ -309,6 +315,67 @@ public class FundHoldTest {
         // 可以在这里对 isBuySuccessful 进行断言或其他操作
         // 例如，验证购买是否成功
         assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTradeDefaultTime() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/gettrades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<FundTrade> trades = objectMapper.readValue(responseContent, new TypeReference<LinkedList<FundTrade>>() {});
+        for (FundTrade trade : trades) {
+            System.out.println("trade："+trade);
+        }
+
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTrade() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 17));;
+        request.setEndTime(TimeUtil.getNowTime());
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/gettrades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<FundTrade> trades = objectMapper.readValue(responseContent, new TypeReference<LinkedList<FundTrade>>() {});
+        for (FundTrade trade : trades) {
+            System.out.println("trade："+trade);
+        }
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetFundTradeFail() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        request.setStartTime(new Date(123, 7, 17));;
+        request.setEndTime(new Date(123, 7, 16));
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fundhold/gettrades")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
     }
 }
 
