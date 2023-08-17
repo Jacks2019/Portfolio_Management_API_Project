@@ -40,4 +40,11 @@ public class StockHis {
 
     @Column(name = "vol")
     private Double vol;
+
+    public StockHis(String ticker) {
+        this.ticker = ticker;
+    }
+
+    public StockHis() {
+    }
 }

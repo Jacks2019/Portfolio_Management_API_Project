@@ -1,0 +1,364 @@
+@startuml
+interface com.portfolio.mgmtsys.repository.TransferRepo {
+}
+interface com.portfolio.mgmtsys.service.StockService {
+~ List<Stock> getAllStocks(Integer,Integer)
+~ List<Stock> searchStock(Map<String,Object>)
+~ Stock getStockByTicker(String)
+}
+class com.portfolio.mgmtsys.model.Request {
+}
+interface com.portfolio.mgmtsys.service.FundHoldService {
+~ List<FundHold> getAllFundHold(Integer)
+~ boolean buyFund(BuyAndSellFundRequest)
+~ boolean sellFund(BuyAndSellFundRequest)
+~ LinkedList<FundTrade> getTrades(GetTradesRequest)
+}
+class com.portfolio.mgmtsys.controller.StockHoldController {
+~ StockHoldService service
++ ResponseEntity<Object> getAllStockHold(Integer)
++ ResponseEntity<Object> buyStock(BuyAndSellStockRequest)
++ ResponseEntity<Object> sellStock(BuyAndSellStockRequest)
++ ResponseEntity<Object> getTrades(GetTradesRequest)
++ ResponseEntity<Object> getAllStockHoldTrend(GetStockTrendRequest)
+}
+class com.portfolio.mgmtsys.domain.StockHis {
+- Integer id
+- String ticker
+- String name
+- Date date
+- Double currentPrice
+- Double openPrice
+- Double highPrice
+- Double lowPrice
+- Double closePrice
+- Double vol
+}
+enum com.portfolio.mgmtsys.enumeration.FundTradeType {
++  SUBSCRIBE
++  REDEEM
+}
+interface com.portfolio.mgmtsys.service.StockHoldService {
+~ LinkedList<MyStockResponse> getAllStockHold(Integer)
+~ boolean buyStock(BuyAndSellStockRequest)
+~ boolean sellStock(BuyAndSellStockRequest)
+~ LinkedList<Trade> getTrades(GetTradesRequest)
+~ LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest)
+}
+class com.portfolio.mgmtsys.domain.FundHold {
+- Integer id
+- Integer accountId
+- String code
+- Double subscriptionPrice
+- Integer amount
++ String toString()
+}
+interface com.portfolio.mgmtsys.repository.StockHisRepo {
+}
+class com.portfolio.mgmtsys.model.MyStockResponse {
+- String stockName
+- String ticker
+- Integer amount
+- Double currentPrice
++ String getStockName()
++ void setStockName(String)
++ String getTicker()
++ void setTicker(String)
++ Integer getAmount()
++ void setAmount(Integer)
++ Double getCurrentPrice()
++ void setCurrentPrice(Double)
++ String toString()
+}
+interface com.portfolio.mgmtsys.service.FundService {
+~ List<Fund> getAllFunds(Integer,Integer)
+~ List<Fund> searchFund(Map<String,Object>)
+~ Fund getFundByCode(String)
+}
+interface com.portfolio.mgmtsys.repository.AssetsRepo {
+}
+interface com.portfolio.mgmtsys.repository.FundTradeRepo {
+}
+class com.portfolio.mgmtsys.domain.FundHis {
+- Integer id
+- String code
+- Date date
+- Double unitNet
+- Double accNet
+- Double rate
+- String subscription
+- String redemption
+}
+interface com.portfolio.mgmtsys.repository.FundRepo {
+}
+interface com.portfolio.mgmtsys.service.AssetsService {
+~ Assets getAssetsById(Integer)
+~ Assets transferIn(Map<String,Object>)
+~ Assets transferOut(Map<String,Object>)
+}
+enum com.portfolio.mgmtsys.enumeration.TransferType {
++  OUT
++  IN
+}
+class com.portfolio.mgmtsys.model.BuyAndSellStockRequest {
+- Integer accountId
+- String ticker
+- Integer amount
++ Integer getAccountId()
++ void setAccountId(Integer)
++ String getTicker()
++ void setTicker(String)
++ Integer getAmount()
++ void setAmount(Integer)
+}
+class com.portfolio.mgmtsys.domain.Assets {
+- Integer id
+- Double totalAssets
+- Double stockAssets
+- Double balance
+- Double fundAssets
+}
+interface com.portfolio.mgmtsys.repository.AccountRepo {
+}
+class com.portfolio.mgmtsys.service.impl.FundHoldServiceImpl {
+~ FundHoldRepo fundHoldRepo
+~ AssetsRepo assetsRepo
+~ FundRepo fundRepo
+~ FundTradeRepo fundTradeRepo
++ List<FundHold> getAllFundHold(Integer)
++ boolean buyFund(BuyAndSellFundRequest)
++ boolean sellFund(BuyAndSellFundRequest)
++ LinkedList<FundTrade> getTrades(GetTradesRequest)
+- List<FundTrade> findTradesByCodeAndAccount(String,Integer,Date,Date)
+}
+interface com.portfolio.mgmtsys.repository.StockRepo {
+}
+class com.portfolio.mgmtsys.service.impl.StockHoldServiceImpl {
+~ StockRepo stockRepo
+~ StockHoldRepo stockHoldRepo
+~ AssetsRepo assetsRepo
+~ TradeRepo tradeRepo
+~ StockHisRepo stockHisRepo
+- Stock findStockByTicker(String)
+- StockHold findStockHoldByTickerAndAccount(String,Integer)
+- List<Trade> findTradesByTickerAndAccount(String,Integer,Date,Date)
+- List<StockHis> findStockHis(String,Date,Date)
++ LinkedList<MyStockResponse> getAllStockHold(Integer)
++ boolean buyStock(BuyAndSellStockRequest)
++ boolean sellStock(BuyAndSellStockRequest)
++ LinkedList<Trade> getTrades(GetTradesRequest)
++ LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest)
+}
+class com.portfolio.mgmtsys.domain.Stock {
+- String ticker
+- String name
+- Date date
+- Double currentPrice
+- Double openPrice
+- Double highPrice
+- Double lowPrice
+- Double closePrice
+- Double vol
+}
+class com.portfolio.mgmtsys.utils.TimeUtil {
++ {static} Date getNowTime()
++ {static} Date[] extractedTime(TimeRequest)
++ {static} Specification<T> timeLimit(Date,Date,Example<T>)
+}
+class com.portfolio.mgmtsys.domain.Transfer {
+- Integer id
+- Integer accountId
+- TransferType type
+- Date time
+- Double amount
+}
+class com.portfolio.mgmtsys.domain.FundTrade {
+- Integer id
+- Integer accountId
+- String code
+- FundTradeType type
+- Date time
+- Double price
+- Integer amount
+}
+class com.portfolio.mgmtsys.aspect.CheckBalanceAspect {
+~ AssetsRepo assetsRepo
++ void checkBalance(JoinPoint)
+}
+class com.portfolio.mgmtsys.domain.Account {
+- Integer id
+- String name
+- String password
+}
+class com.portfolio.mgmtsys.service.impl.AssetsServiceImpl {
+~ AssetsRepo repo
+~ TransferRepo transferRepo
++ Assets getAssetsById(Integer)
++ Assets transferIn(Map<String,Object>)
++ Assets transferOut(Map<String,Object>)
+}
+class com.portfolio.mgmtsys.model.BuyAndSellFundRequest {
+- Integer accountId
+- String code
+- Integer amount
++ Integer getAccountId()
++ void setAccountId(Integer)
++ String getCode()
++ void setCode(String)
++ Integer getAmount()
++ void setAmount(Integer)
++ String toString()
+}
+class com.portfolio.mgmtsys.model.GetTradesRequest {
+- Integer accountId
++ Integer getAccountId()
++ void setAccountId(Integer)
++ String toString()
+}
+class com.portfolio.mgmtsys.controller.FundHoldController {
+~ FundHoldService service
++ ResponseEntity<Object> getAllStockHold(Integer)
++ ResponseEntity<Object> buyFund(BuyAndSellFundRequest)
++ ResponseEntity<Object> sellFund(BuyAndSellFundRequest)
++ ResponseEntity<Object> sellFund(GetTradesRequest)
+}
+class com.portfolio.mgmtsys.domain.StockHold {
+- Integer id
+- int accountId
+- String ticker
+- Double callPrice
+- Integer amount
+}
+class com.portfolio.mgmtsys.controller.AssetsController {
+~ AssetsService service
++ ResponseEntity<Object> getAssetsById(Integer)
++ ResponseEntity<Object> transferIn(Map<String,Object>)
++ ResponseEntity<Object> transferOut(Map<String,Object>)
+}
+interface com.portfolio.mgmtsys.repository.TradeRepo {
+}
+enum com.portfolio.mgmtsys.enumeration.TradeType {
++  SELL
++  BUY
+}
+class com.portfolio.mgmtsys.model.GetStockTrendRequest {
+- Integer accountId
++ Integer getAccountId()
++ void setAccountId(Integer)
+}
+class com.portfolio.mgmtsys.service.impl.AccountServiceImpl {
+~ AccountRepo repo
+~ AssetsRepo assetsRepo
++ Integer login(Account)
++ Account register(Account)
+}
+class com.portfolio.mgmtsys.domain.Trade {
+- Integer id
+- Integer accountId
+- String ticker
+- TradeType type
+- Date time
+- Double price
+- Integer amount
+}
+class com.portfolio.mgmtsys.controller.StockController {
+- StockService service
++ ResponseEntity<Object> getAllStocks(Integer,Integer)
++ ResponseEntity<Object> searchStock(Map<String,Object>)
++ ResponseEntity<Object> getStockByTicker(String)
+}
+class com.portfolio.mgmtsys.model.Response {
+}
+class com.portfolio.mgmtsys.controller.AccountController {
+~ AccountService service
++ ResponseEntity<Object> login(Account)
++ ResponseEntity<Object> register(Account)
+}
+class com.portfolio.mgmtsys.Application {
++ {static} void main(String[])
+}
+class com.portfolio.mgmtsys.service.impl.FundServiceImpl {
+- FundRepo repo
++ List<Fund> getAllFunds(Integer,Integer)
++ List<Fund> searchFund(Map<String,Object>)
++ Fund getFundByCode(String)
+}
+class com.portfolio.mgmtsys.domain.Fund {
+- String code
+- Date date
+- Double unitNet
+- Double accNet
+- Double rate
+- String subscription
+- String redemption
+}
+class com.portfolio.mgmtsys.model.TimeRequest {
+~ Date startTime
+~ Date endTime
++ Date getStartTime()
++ void setStartTime(Date)
++ Date getEndTime()
++ void setEndTime(Date)
+}
+class com.portfolio.mgmtsys.controller.FundController {
+- FundService service
++ ResponseEntity<Object> getAllFunds(Integer,Integer)
++ ResponseEntity<Object> searchFund(Map<String,Object>)
++ ResponseEntity<Object> getFundByCode(String)
+}
+interface com.portfolio.mgmtsys.repository.FundHoldRepo {
+~ ArrayList<FundHold> findAllByAccountId(Integer)
+}
+interface com.portfolio.mgmtsys.repository.StockHoldRepo {
+~ ArrayList<StockHold> findAllByAccountId(Integer)
+}
+class com.portfolio.mgmtsys.service.impl.StockServiceImpl {
+- StockRepo repo
++ List<Stock> getAllStocks(Integer,Integer)
++ List<Stock> searchStock(Map<String,Object>)
++ Stock getStockByTicker(String)
+}
+interface com.portfolio.mgmtsys.service.AccountService {
+~ Integer login(Account)
+~ Account register(Account)
+}
+class com.portfolio.mgmtsys.model.GetStockTrendResponse {
+- String name
+- String ticker
+- List<Double> prices
++ String getName()
++ void setName(String)
++ String getTicker()
++ void setTicker(String)
++ List<Double> getPrices()
++ void setPrices(List<Double>)
+}
+
+
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.TransferRepo
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.StockHisRepo
+org.springframework.data.jpa.repository.JpaSpecificationExecutor <|-- com.portfolio.mgmtsys.repository.StockHisRepo
+com.portfolio.mgmtsys.model.Response <|-- com.portfolio.mgmtsys.model.MyStockResponse
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.AssetsRepo
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.FundTradeRepo
+org.springframework.data.jpa.repository.JpaSpecificationExecutor <|-- com.portfolio.mgmtsys.repository.FundTradeRepo
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.FundRepo
+com.portfolio.mgmtsys.model.Request <|-- com.portfolio.mgmtsys.model.BuyAndSellStockRequest
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.AccountRepo
+com.portfolio.mgmtsys.service.FundHoldService <|.. com.portfolio.mgmtsys.service.impl.FundHoldServiceImpl
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.StockRepo
+com.portfolio.mgmtsys.service.StockHoldService <|.. com.portfolio.mgmtsys.service.impl.StockHoldServiceImpl
+com.portfolio.mgmtsys.service.AssetsService <|.. com.portfolio.mgmtsys.service.impl.AssetsServiceImpl
+com.portfolio.mgmtsys.model.Request <|-- com.portfolio.mgmtsys.model.BuyAndSellFundRequest
+com.portfolio.mgmtsys.model.TimeRequest <|-- com.portfolio.mgmtsys.model.GetTradesRequest
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.TradeRepo
+org.springframework.data.jpa.repository.JpaSpecificationExecutor <|-- com.portfolio.mgmtsys.repository.TradeRepo
+com.portfolio.mgmtsys.model.TimeRequest <|-- com.portfolio.mgmtsys.model.GetStockTrendRequest
+com.portfolio.mgmtsys.service.AccountService <|.. com.portfolio.mgmtsys.service.impl.AccountServiceImpl
+com.portfolio.mgmtsys.service.FundService <|.. com.portfolio.mgmtsys.service.impl.FundServiceImpl
+com.portfolio.mgmtsys.model.Request <|-- com.portfolio.mgmtsys.model.TimeRequest
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.FundHoldRepo
+org.springframework.data.jpa.repository.JpaRepository <|-- com.portfolio.mgmtsys.repository.StockHoldRepo
+com.portfolio.mgmtsys.service.StockService <|.. com.portfolio.mgmtsys.service.impl.StockServiceImpl
+com.portfolio.mgmtsys.model.Response <|-- com.portfolio.mgmtsys.model.GetStockTrendResponse
+@enduml

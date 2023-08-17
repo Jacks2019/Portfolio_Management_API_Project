@@ -279,17 +279,28 @@ public class StockHoldServiceImpl implements StockHoldService {
     @Override
     public LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetStockTrendRequest request) {
         // 1. 根据登陆Id查询所持有的所有股票
-        ArrayList<StockHold> myStocks = stockHoldRepo.findAllByAccountId(request.getAccountId());
+        if (request == null){
+            return null;
+        }
+
+        List<StockHold> myStocks = stockHoldRepo.findAll(Example.of(new StockHold(request.getAccountId())));
         if (myStocks == null || myStocks.size() == 0){
             return null;
         }
-        LinkedList<MyStockResponse> list = new LinkedList<>();
+
         // 2. 获取时间限制，默认七天内
         // 定义日期范围
         // 获取当前时间
         Date[] time = TimeUtil.extractedTime(request);
         if (time[0].after(time[1])){
             return null;
+        }
+        for (StockHold myStock : myStocks) {
+            List<StockHis> all = stockHisRepo.findAll(Example.of(new StockHis(myStock.getTicker())));
+            for (StockHis stockHis : all) {
+                System.out.println(stockHis);
+            }
+            System.out.println("=====");
         }
 
         // 3. 获取时间范围内股票信息

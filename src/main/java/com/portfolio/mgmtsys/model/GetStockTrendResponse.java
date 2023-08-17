@@ -7,6 +7,7 @@ package com.portfolio.mgmtsys.model;
  */
 
 
+import java.util.Arrays;
 import java.util.List;
 
 public class GetStockTrendResponse  extends Response{
@@ -37,5 +38,14 @@ public class GetStockTrendResponse  extends Response{
 
     public void setPrices(List<Double> prices) {
         this.prices = prices;
+    }
+
+    @Override
+    public String toString() {
+        return "GetStockTrendResponse{" +
+                "name='" + name + '\'' +
+                ", ticker='" + ticker + '\'' +
+                ", prices=" +  prices.toString() +
+                '}';
     }
 }
