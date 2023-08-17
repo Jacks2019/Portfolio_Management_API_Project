@@ -3,15 +3,12 @@ package com.portfolio.mgmtsys.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.portfolio.mgmtsys.domain.StockHis;
+import com.portfolio.mgmtsys.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.portfolio.mgmtsys.domain.Stock;
 import com.portfolio.mgmtsys.service.StockService;
@@ -46,5 +43,13 @@ public class StockController {
         }
         return new ResponseEntity<Object>("No stock with this ticker is found.", HttpStatus.NOT_FOUND);
     }
-    
+
+    @GetMapping("/getstockhis")
+    public ResponseEntity<Object> getStockHis(@RequestBody GetStockHisRequest request){
+        List<StockHis> responses = service.getStockHis(request);
+        if (responses == null || responses.size() == 0){
+            return new ResponseEntity<>("No stock with this ticker is found.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(responses, HttpStatus.OK);
+    }
 }
