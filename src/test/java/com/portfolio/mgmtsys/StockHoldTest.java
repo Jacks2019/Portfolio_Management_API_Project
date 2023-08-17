@@ -8,6 +8,7 @@ package com.portfolio.mgmtsys;
 
 import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.BuyAndSellStockRequest;
+import com.portfolio.mgmtsys.model.GetStockTrendResponse;
 import com.portfolio.mgmtsys.model.GetTradesRequest;
 import com.portfolio.mgmtsys.model.MyStockResponse;
 import com.portfolio.mgmtsys.utils.TimeUtil;
@@ -66,7 +67,7 @@ public class StockHoldTest {
         Integer accountId = 0;
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/getallstockhold/{accountId}", accountId))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -112,7 +113,7 @@ public class StockHoldTest {
         MvcResult result = mockMvc.perform(post("/stockhold/buystock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -138,7 +139,7 @@ public class StockHoldTest {
         MvcResult result = mockMvc.perform(post("/stockhold/buystock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -245,7 +246,7 @@ public class StockHoldTest {
         MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -345,7 +346,7 @@ public class StockHoldTest {
         MvcResult result = mockMvc.perform(get("/stockhold/gettrades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
         String responseContent = result.getResponse().getContentAsString();
@@ -368,7 +369,7 @@ public class StockHoldTest {
         MvcResult result = mockMvc.perform(get("/stockhold/gettrades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
         String responseContent = result.getResponse().getContentAsString();
@@ -393,6 +394,27 @@ public class StockHoldTest {
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(print())
                 .andReturn();
+
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testGetStockTrendDefaultTime() throws Exception{
+        GetTradesRequest request = new GetTradesRequest();
+        request.setAccountId(4);
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<GetStockTrendResponse> stockTrendResponses = objectMapper.readValue(responseContent, new TypeReference<LinkedList<GetStockTrendResponse>>() {});
+        for (GetStockTrendResponse stockTrendRespons : stockTrendResponses) {
+            System.out.println(stockTrendRespons);
+        }
 
     }
 }

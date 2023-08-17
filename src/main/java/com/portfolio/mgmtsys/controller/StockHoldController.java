@@ -29,7 +29,7 @@ public class StockHoldController {
     public ResponseEntity<Object> getAllStockHold(@PathVariable Integer accountId) {
         LinkedList<MyStockResponse> allStockHold = service.getAllStockHold(accountId);
         if (allStockHold != null && allStockHold.size() !=0 ) {
-            return new ResponseEntity<>(allStockHold, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(allStockHold, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
@@ -38,7 +38,7 @@ public class StockHoldController {
     public ResponseEntity<Object> buyStock(@RequestBody BuyAndSellStockRequest request){
         boolean buystock = service.buyStock(request);
         return buystock ?
-                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(true, HttpStatus.OK):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
@@ -46,7 +46,7 @@ public class StockHoldController {
     public ResponseEntity<Object> sellStock(@RequestBody BuyAndSellStockRequest request){
         boolean buystock = service.sellStock(request);
         return buystock ?
-                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(true, HttpStatus.OK):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
@@ -55,7 +55,7 @@ public class StockHoldController {
         LinkedList<Trade> responses = service.getTrades(request);
         return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
-                new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
+                new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
     @GetMapping("/getallstockholdtrend")
@@ -63,7 +63,7 @@ public class StockHoldController {
         LinkedList<GetStockTrendResponse> responses = service.getAllStockHoldTrend(request);
         return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
-                new ResponseEntity<>(responses, HttpStatus.ACCEPTED);
+                new ResponseEntity<>(responses, HttpStatus.OK);
     }
 
 }

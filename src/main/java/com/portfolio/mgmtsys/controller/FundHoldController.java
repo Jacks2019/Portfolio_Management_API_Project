@@ -30,7 +30,7 @@ public class FundHoldController {
     public ResponseEntity<Object> getAllStockHold(@PathVariable Integer accountId) {
         List<FundHold> allFundHold = service.getAllFundHold(accountId);
         if (allFundHold != null && allFundHold.size() != 0) {
-            return new ResponseEntity<>(allFundHold, HttpStatus.ACCEPTED);
+            return new ResponseEntity<>(allFundHold, HttpStatus.OK);
         }
         return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
     }
@@ -39,7 +39,7 @@ public class FundHoldController {
     public ResponseEntity<Object> buyFund(@RequestBody BuyAndSellFundRequest request){
         boolean buystock = service.buyFund(request);
         return buystock ?
-                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(true, HttpStatus.OK):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
@@ -47,7 +47,7 @@ public class FundHoldController {
     public ResponseEntity<Object> sellFund(@RequestBody BuyAndSellFundRequest request){
         boolean buystock = service.sellFund(request);
         return buystock ?
-                new ResponseEntity<>(true, HttpStatus.ACCEPTED):
+                new ResponseEntity<>(true, HttpStatus.OK):
                 new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
     }
 
@@ -56,7 +56,7 @@ public class FundHoldController {
        LinkedList<FundTrade> response= service.getTrades(request);
         return response == null?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED):
-                new ResponseEntity<>(response, HttpStatus.ACCEPTED);
+                new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 

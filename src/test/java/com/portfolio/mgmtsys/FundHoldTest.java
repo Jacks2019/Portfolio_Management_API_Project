@@ -69,7 +69,7 @@ public class FundHoldTest {
         Integer accountId = 1;
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fundhold/getallfundhold/{accountId}", accountId))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -110,7 +110,7 @@ public class FundHoldTest {
         MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -134,7 +134,7 @@ public class FundHoldTest {
         MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -230,7 +230,7 @@ public class FundHoldTest {
         MvcResult result = mockMvc.perform(post("/fundhold/sellfund")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
 
@@ -327,7 +327,7 @@ public class FundHoldTest {
         MvcResult result = mockMvc.perform(get("/fundhold/gettrades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
         String responseContent = result.getResponse().getContentAsString();
@@ -350,7 +350,7 @@ public class FundHoldTest {
         MvcResult result = mockMvc.perform(get("/fundhold/gettrades")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
-                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
         String responseContent = result.getResponse().getContentAsString();

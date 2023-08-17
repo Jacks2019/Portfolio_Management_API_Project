@@ -25,4 +25,11 @@ public class StockHold {
 
     @Column(name = "amount")
     private Integer amount;
+
+    public StockHold(int accountId) {
+        this.accountId = accountId;
+    }
+    public StockHold(){
+
+    }
 }
