@@ -3,18 +3,17 @@ package com.portfolio.mgmtsys.controller;
 import java.util.List;
 import java.util.Map;
 
+import com.portfolio.mgmtsys.domain.FundHis;
+import com.portfolio.mgmtsys.domain.StockHis;
+import com.portfolio.mgmtsys.model.GetFundHisRequest;
+import com.portfolio.mgmtsys.model.GetStockHisRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.portfolio.mgmtsys.domain.Fund;
 import com.portfolio.mgmtsys.service.FundService;
-
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @RestController
@@ -46,6 +45,15 @@ public class FundController {
             return new ResponseEntity<Object>("No fund with this code found.", HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<Object>(fund, HttpStatus.OK);
+    }
+
+    @GetMapping("/getfundhis")
+    public ResponseEntity<Object> getStockHis(@RequestBody GetFundHisRequest request){
+        List<FundHis> responses = service.getFundHis(request);
+        if (responses == null || responses.size() == 0){
+            return new ResponseEntity<>("No stock with this ticker is found.", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(responses, HttpStatus.OK);
     }
     
 }

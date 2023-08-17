@@ -11,6 +11,7 @@ import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
+import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -60,13 +61,7 @@ public class StockHoldServiceImpl implements StockHoldService {
         return tradeRepo.findAll(tradeSpecification);
     }
 
-    private List<StockHis> findStockHis(String ticker, Date startTime, Date endTime) {
-        StockHis stockHis = new StockHis();
-        stockHis.setTicker(ticker);
-        Example<StockHis> example = Example.of(stockHis);
-        Specification<StockHis> stockHisSpecification = TimeUtil.timeLimit(startTime, endTime, example);
-        return stockHisRepo.findAll(stockHisSpecification);
-    }
+
 
 
 
@@ -319,6 +314,14 @@ public class StockHoldServiceImpl implements StockHoldService {
             responses.add(response);
         }
         return responses;
+    }
+
+    public List<StockHis> findStockHis(String ticker, Date startTime, Date endTime) {
+        StockHis stockHis = new StockHis();
+        stockHis.setTicker(ticker);
+        Example<StockHis> example = Example.of(stockHis);
+        Specification<StockHis> stockHisSpecification = TimeUtil.timeLimit(startTime, endTime, example);
+        return stockHisRepo.findAll(stockHisSpecification);
     }
 
 

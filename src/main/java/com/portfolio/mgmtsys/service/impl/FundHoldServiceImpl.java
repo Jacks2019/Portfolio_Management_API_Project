@@ -12,6 +12,7 @@ import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.FundHoldService;
+import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
@@ -247,13 +248,7 @@ public class FundHoldServiceImpl implements FundHoldService {
     }
 
 
-    private List<FundHis> findFundHis(String code, Date startTime, Date endTime) {
-        FundHis fundHis = new FundHis();
-        fundHis.setCode(code);
-        Example<FundHis> example = Example.of(fundHis);
-        Specification<FundHis> stockHisSpecification = TimeUtil.timeLimit(startTime, endTime, example);
-        return fundHisRepo.findAll(stockHisSpecification);
-    }
+
     private List<FundTrade> findTradesByCodeAndAccount(String code, Integer accountId, Date startTime, Date endTime) {
         FundTrade trade = new FundTrade();
         trade.setAccountId(accountId);
@@ -261,5 +256,13 @@ public class FundHoldServiceImpl implements FundHoldService {
         Example<FundTrade> example = Example.of(trade);
         Specification<FundTrade> tradeSpecification = TimeUtil.timeLimit(startTime, endTime, example);
         return fundTradeRepo.findAll(tradeSpecification);
+    }
+
+    private List<FundHis> findFundHis(String code, Date startTime, Date endTime) {
+        FundHis fundHis = new FundHis();
+        fundHis.setCode(code);
+        Example<FundHis> example = Example.of(fundHis);
+        Specification<FundHis> stockHisSpecification = TimeUtil.timeLimit(startTime, endTime, example);
+        return fundHisRepo.findAll(stockHisSpecification);
     }
 }
