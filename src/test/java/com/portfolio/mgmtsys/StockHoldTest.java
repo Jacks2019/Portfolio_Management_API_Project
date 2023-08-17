@@ -6,7 +6,7 @@ package com.portfolio.mgmtsys;
  * Description:
  */
 
-import com.portfolio.mgmtsys.model.BuyStockRequest;
+import com.portfolio.mgmtsys.model.BuyAndSellStockRequest;
 import com.portfolio.mgmtsys.model.MyStockResponse;
 import jakarta.transaction.Transactional;
 import org.junit.Before;
@@ -17,6 +17,7 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -58,7 +59,7 @@ public class StockHoldTest {
 
     @Test
     public void testGetAllStockHoldExist() throws Exception {
-        Integer accountId = 4;
+        Integer accountId = 0;
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/getallstockhold/{accountId}", accountId))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
@@ -70,7 +71,7 @@ public class StockHoldTest {
 
         // 可以在这里对 allStockHold 进行断言或其他操作
         // 例如，检查列表长度、访问特定索引处的对象等
-        assertEquals(2, allStockHold.size());
+        assertEquals(1, allStockHold.size());
 
         for (MyStockResponse stockResponse : allStockHold) {
             System.out.println("Stock Name: " + stockResponse.getStockName());
@@ -93,13 +94,41 @@ public class StockHoldTest {
         assert responseContent.isEmpty();
     }
 
+    @Transactional
+    @Commit
     @Test
     public void testBuyStock() throws Exception {
         // 创建 BuyStockRequest 对象
-        BuyStockRequest request = new BuyStockRequest();
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
         request.setAccountId(4);
         request.setTicker("000010.SZ");
-        request.setAmount(10);
+        request.setAmount(99);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/buystock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功.S
+        assertTrue(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyNewStock() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(4);
+        request.setTicker("000017.SZ");
+        request.setAmount(1);
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(post("/stockhold/buystock")
@@ -115,11 +144,192 @@ public class StockHoldTest {
         // 可以在这里对 isBuySuccessful 进行断言或其他操作
         // 例如，验证购买是否成功
         assertTrue(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyStockFail() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(4);
+        request.setTicker("000010");
+        request.setAmount(99);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/buystock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
 //        testGetAllStockHoldExist();
     }
 
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyStockFail2() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(111);
+        request.setTicker("000010.SZ");
+        request.setAmount(99);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/buystock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+//        testGetAllStockHoldExist();
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyStockFail3() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(4);
+        request.setTicker("000010.SZ");
+        request.setAmount(999999999);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/buystock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+//        testGetAllStockHoldExist();
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testSellStock() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(4);
+        request.setTicker("000010.SZ");
+        request.setAmount(1);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertTrue(isBuySuccessful);
+    }
 
 
+    @Transactional
+    @Commit
+    @Test
+    public void testSellStockFail() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(4);
+        request.setTicker("000010.");
+        request.setAmount(1);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+    @Transactional
+    @Commit
+    @Test
+    public void testSellStockFail2() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(7);
+        request.setTicker("000010.SZ");
+        request.setAmount(1);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testSellStockFail3() throws Exception {
+        // 创建 BuyStockRequest 对象
+        BuyAndSellStockRequest request = new BuyAndSellStockRequest();
+        request.setAccountId(7);
+        request.setTicker("000017.SZ");
+        request.setAmount(999999);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
 }
 
 

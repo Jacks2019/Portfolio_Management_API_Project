@@ -8,7 +8,6 @@ package com.portfolio.mgmtsys.service;
 
 import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.*;
-import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 
@@ -17,9 +16,9 @@ public interface StockHoldService {
 
     LinkedList<MyStockResponse> getAllStockHold(Integer accountId);
 
-    boolean buyStock(BuyStockRequest request);
+    boolean buyStock(BuyAndSellStockRequest request);
 
-    boolean sellStock(SellStockRequest request);
+    boolean sellStock(BuyAndSellStockRequest request);
 
     LinkedList<Trade> getTrades(GetTradesRequest request);
 

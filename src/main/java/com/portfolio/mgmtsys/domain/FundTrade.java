@@ -43,4 +43,17 @@ public class FundTrade {
     @Column(name = "amount")
     private Integer amount;
 
+    public FundTrade( Integer accountId, String code, FundTradeType type, Date time, Double price, Integer amount) {
+        this.accountId = accountId;
+        this.code = code;
+        this.type = type;
+        this.time = time;
+        this.price = price;
+        this.amount = amount;
+    }
+
+    public FundTrade(){
+
+    }
+
 }

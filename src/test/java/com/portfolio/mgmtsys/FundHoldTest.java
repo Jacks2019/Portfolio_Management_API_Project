@@ -7,6 +7,8 @@ package com.portfolio.mgmtsys;
  */
 
 import com.portfolio.mgmtsys.domain.FundHold;
+import com.portfolio.mgmtsys.model.BuyAndSellFundRequest;
+import com.portfolio.mgmtsys.model.BuyAndSellStockRequest;
 import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
@@ -15,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -56,7 +60,7 @@ public class FundHoldTest {
 
     @Test
     public void testGetAllFundHoldExist() throws Exception {
-        Integer accountId = 4;
+        Integer accountId = 1;
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fundhold/getallfundhold/{accountId}", accountId))
                 .andExpect(MockMvcResultMatchers.status().isAccepted())
@@ -66,9 +70,8 @@ public class FundHoldTest {
         String responseContent = result.getResponse().getContentAsString();
         LinkedList<FundHold> allFundHold = objectMapper.readValue(responseContent, new TypeReference<LinkedList<FundHold>>() {});
 
-        // 可以在这里对 allStockHold 进行断言或其他操作
         // 例如，检查列表长度、访问特定索引处的对象等
-        assertEquals(2, allFundHold.size());
+        assertEquals(1, allFundHold.size());
 
         for (FundHold fundResponse : allFundHold) {
             System.out.println(fundResponse.toString());
@@ -76,11 +79,11 @@ public class FundHoldTest {
     }
 
     @Test
-    public void testGetAllStockHoldNotExist() throws Exception {
+    public void testGetAllFundHoldNotExist() throws Exception {
         Integer accountId = 2;
 
         // 模拟请求并验证响应
-        MvcResult result = mockMvc.perform(get("/stockhold/getallstockhold/{accountId}", accountId))
+        MvcResult result = mockMvc.perform(get("/fundhold/getallfundhold/{accountId}", accountId))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andReturn();
 
@@ -88,13 +91,225 @@ public class FundHoldTest {
         assert responseContent.isEmpty();
     }
 
+    @Transactional
+    @Commit
     @Test
     public void testBuyFund() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("002583");
+        request.setAmount(10);
 
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertTrue(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyNewFund() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("012723");
+        request.setAmount(11);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertTrue(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyFundFail() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(99);
+        request.setCode("002583");
+        request.setAmount(10);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyFundFail2() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("002583");
+        request.setAmount(100000000);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testBuyFundFail3() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("008888");
+        request.setAmount(10);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/buyfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testSellFund() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("002583");
+        request.setAmount(1);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/sellfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isAccepted())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertTrue(isBuySuccessful);
     }
 
 
+    @Transactional
+    @Commit
+    @Test
+    public void testSellFundFail() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("000010.");
+        request.setAmount(1);
 
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/sellfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+    @Transactional
+    @Commit
+    @Test
+    public void testSellFundFail2() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(7);
+        request.setCode("002583");
+        request.setAmount(1);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/fundhold/sellfund")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
+
+    @Transactional
+    @Commit
+    @Test
+    public void testSellFundFail3() throws Exception {
+        BuyAndSellFundRequest request = new BuyAndSellFundRequest();
+        request.setAccountId(4);
+        request.setCode("002583");
+        request.setAmount(999999);
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(post("/stockhold/sellstock")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isUnauthorized())
+                .andDo(print())
+                .andReturn();
+
+        String responseContent = result.getResponse().getContentAsString();
+        Boolean isBuySuccessful = objectMapper.readValue(responseContent, Boolean.class);
+
+        // 可以在这里对 isBuySuccessful 进行断言或其他操作
+        // 例如，验证购买是否成功
+        assertFalse(isBuySuccessful);
+    }
 }
 
 

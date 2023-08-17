@@ -10,7 +10,6 @@ import com.portfolio.mgmtsys.domain.Trade;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +35,7 @@ public class StockHoldController {
     }
 
     @PostMapping("/buystock")
-    public ResponseEntity<Object> buyStock(@RequestBody BuyStockRequest request){
+    public ResponseEntity<Object> buyStock(@RequestBody BuyAndSellStockRequest request){
         boolean buystock = service.buyStock(request);
         return buystock ?
                 new ResponseEntity<>(true, HttpStatus.ACCEPTED):
@@ -44,7 +43,7 @@ public class StockHoldController {
     }
 
     @PostMapping("/sellstock")
-    public ResponseEntity<Object> sellStock(@RequestBody SellStockRequest request){
+    public ResponseEntity<Object> sellStock(@RequestBody BuyAndSellStockRequest request){
         boolean buystock = service.sellStock(request);
         return buystock ?
                 new ResponseEntity<>(true, HttpStatus.ACCEPTED):
