@@ -24,7 +24,7 @@ public class FundHis{
     private String code;
 
     @Column(name = "date")
-    private Date date;
+    private Date time;
 
     @Column(name = "unit_net")
     private Double unitNet;
