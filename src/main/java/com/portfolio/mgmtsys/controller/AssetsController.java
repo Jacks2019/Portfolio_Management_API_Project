@@ -39,7 +39,7 @@ public class AssetsController {
         if(assets==null){
             return new ResponseEntity<Object>("Account not found.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Object>(assets, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Object>(assets, HttpStatus.OK);
     }
 
     @PostMapping("/transferout")
@@ -53,6 +53,6 @@ public class AssetsController {
         if(assets==null){
             return new ResponseEntity<Object>("Account not found.", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Object>(assets, HttpStatus.ACCEPTED);
+        return new ResponseEntity<Object>(assets, HttpStatus.OK);
     }
 }
