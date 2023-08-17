@@ -24,7 +24,7 @@ public class AssetsController {
     @Autowired
     AssetsService service;
     
-    @GetMapping("/getAssetsById/{id}")
+    @GetMapping("/getassetsbyId/{id}")
     public ResponseEntity<Object> getAssetsById(@PathVariable Integer id){
         Assets assets = service.getAssetsById(id);
         if(assets==null){
