@@ -6,5 +6,5 @@ package com.portfolio.mgmtsys.task;
 * Description: 
 */
 
-public class ScheduleTask {
+public class ScheduledTask {
 }
