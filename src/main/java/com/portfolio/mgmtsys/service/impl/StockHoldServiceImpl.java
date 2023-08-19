@@ -35,7 +35,7 @@ public class StockHoldServiceImpl implements StockHoldService {
     @Autowired
     StockHisRepo stockHisRepo;
 
-    private Stock findStockByTicker(String ticker){
+    public Stock findStockByTicker(String ticker){
         Stock stock = new Stock();
         stock.setTicker(ticker);
         Example<Stock> example = Example.of(stock);
@@ -43,7 +43,7 @@ public class StockHoldServiceImpl implements StockHoldService {
         return optionalStock.orElse(null);
     }
 
-    private StockHold findStockHoldByTickerAndAccount(String ticker, Integer accountId){
+    public StockHold findStockHoldByTickerAndAccount(String ticker, Integer accountId){
         StockHold stockHold = new StockHold();
         stockHold.setAccountId(accountId);
         stockHold.setTicker(ticker);
@@ -147,15 +147,18 @@ public class StockHoldServiceImpl implements StockHoldService {
             stockHold.setAmount(0);
         }
         System.out.println("ticker: "+stockHold.getTicker());
-        // 5. 修改tradde表
+        // 5. 修改tradde表、StockHold表和Assets表
         Date time = TimeUtil.getNowTime();
 
         Trade trade = new Trade(request.getAccountId(), request.getTicker(),TradeType.BUY, time, currentPrice, request.getAmount());
-        tradeRepo.save(trade);
-        // 6. 修改StockHold表和Assets表
         stockHold.setAmount(stockHold.getAmount()+request.getAmount());
         asset.setBalance(now);
+        asset.setStockAssets(asset.getStockAssets() + currentPrice * request.getAmount());
+        asset.setTotalAssets(asset.getStockAssets() + asset.getFundAssets() + asset.getBalance());
 
+        // 6. 存入数据库
+
+        tradeRepo.save(trade);
         assetsRepo.save(asset);
         stockHoldRepo.save(stockHold);
 
@@ -201,19 +204,21 @@ public class StockHoldServiceImpl implements StockHoldService {
             return false;
         }
 
-        // 5. 修改tradde表
+        // 5. 修改trade表 修改StockHold表和Assets表
         Date time = TimeUtil.getNowTime();
         Trade trade = new Trade(request.getAccountId(), request.getTicker(),TradeType.SELL, time, currentPrice, request.getAmount());
-        tradeRepo.save(trade);
-
-        // 6. 修改StockHold表和Assets表
         stockHold.setAmount(stockHold.getAmount() - request.getAmount());
+
         Double now = asset.getBalance() + currentPrice * request.getAmount();
         asset.setBalance(now);
+        asset.setStockAssets(asset.getStockAssets() - currentPrice * request.getAmount());
+        asset.setTotalAssets(asset.getStockAssets() + asset.getFundAssets() + asset.getBalance());
+
+        // 6. 存入数据库
+        tradeRepo.save(trade);
         assetsRepo.save(asset);
         stockHoldRepo.save(stockHold);
-
-       return true;
+        return true;
     }
 
     /**

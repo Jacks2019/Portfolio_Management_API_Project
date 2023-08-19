@@ -11,13 +11,17 @@ import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -35,11 +39,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
  * Date: 2023/8/17
  * Description:
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
-@SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = Application.class)
 @Transactional
+@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 public class StockTest {
 
     private MockMvc mockMvc;
@@ -74,6 +78,59 @@ public class StockTest {
         for (StockHis stockH : stockHis) {
             System.out.println(stockH);
         }
+    }
 
+    @Test
+    public void testGetStockHisDefault() throws Exception{
+        GetStockHisRequest request = new GetStockHisRequest();
+        request.setTicker("300412.SZ");
+//        request.setStartTime(new Date(123, 7, 15));;
+//        request.setEndTime(TimeUtil.getNowTime());
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stock/getstockhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<StockHis> stockHis = objectMapper.readValue(responseContent, new TypeReference<LinkedList<StockHis>>() {});
+        for (StockHis stockH : stockHis) {
+            System.out.println(stockH);
+        }
+
+    }
+
+    @Test
+    public void testGetStockHisFail() throws Exception{
+        GetStockHisRequest request = new GetStockHisRequest();
+        request.setTicker("300412.SZ");
+        request.setStartTime(new Date(123, 7, 15));;
+        request.setEndTime(new Date(123, 6, 15));
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stock/getstockhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void testGetStockHisFail2() throws Exception{
+        GetStockHisRequest request = new GetStockHisRequest();
+        request.setTicker("300412");
+//        request.setStartTime(new Date(123, 7, 15));;
+//        request.setEndTime(TimeUtil.getNowTime());
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/stock/getstockhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
     }
 }
