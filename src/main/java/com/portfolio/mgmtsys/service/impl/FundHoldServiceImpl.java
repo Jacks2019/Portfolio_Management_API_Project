@@ -65,6 +65,7 @@ public class FundHoldServiceImpl implements FundHoldService {
      */
     @Override
     public boolean buyFund(BuyAndSellFundRequest request) {
+        System.out.println(request);
         // 1. 通过登陆ID查找资产信息
         Assets asset = assetsRepo.findById(request.getAccountId()).orElse(null);
         if(asset == null){
@@ -89,6 +90,7 @@ public class FundHoldServiceImpl implements FundHoldService {
 
         // 4. 判断能否购买
         Double now = asset.getBalance() - request.getAmount() * fund.getUnitNet();
+        System.out.println("now = " + now);
         if (now < 0){
             return false;
         }
@@ -99,6 +101,8 @@ public class FundHoldServiceImpl implements FundHoldService {
 
         fundHold.setAmount(fundHold.getAmount() + request.getAmount());
         asset.setBalance(now);
+        asset.setFundAssets(asset.getFundAssets() + request.getAmount() * fund.getUnitNet());
+        asset.setTotalAssets(asset.getStockAssets() + asset.getFundAssets() + asset.getBalance());
 
         // 6. 存入数据库
         fundTradeRepo.save(fundTrade);
@@ -151,6 +155,10 @@ public class FundHoldServiceImpl implements FundHoldService {
         fundHold.setAmount(fundHold.getAmount() - request.getAmount());
         Double now = asset.getBalance() + currentPrice * request.getAmount();
         asset.setBalance(now);
+        asset.setFundAssets(asset.getFundAssets() - request.getAmount() * fund.getUnitNet());
+        asset.setTotalAssets(asset.getStockAssets() + asset.getFundAssets() + asset.getBalance());
+
+        // 7. 存入数据库
         fundTradeRepo.save(trade);
         assetsRepo.save(asset);
         fundHoldRepo.save(fundHold);

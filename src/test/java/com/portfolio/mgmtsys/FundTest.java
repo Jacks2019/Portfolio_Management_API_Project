@@ -12,13 +12,17 @@ import jakarta.transaction.Transactional;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
@@ -36,11 +40,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
  * Date: 2023/8/17
  * Description:
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = Application.class)
-@SpringBootTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest(classes = Application.class)
 @Transactional
+@AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 public class FundTest {
 
     private MockMvc mockMvc;
@@ -73,6 +77,54 @@ public class FundTest {
         String responseContent = result.getResponse().getContentAsString();
         LinkedList<FundHis> fundHis = objectMapper.readValue(responseContent, new TypeReference<LinkedList<FundHis>>() {});
         fundHis.forEach(System.out::println);
+    }
 
+    @Test
+    public void testGetFundHisDefault() throws Exception{
+        GetFundHisRequest request = new GetFundHisRequest();
+        request.setCode("000081");
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fund/getfundhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        LinkedList<FundHis> fundHis = objectMapper.readValue(responseContent, new TypeReference<LinkedList<FundHis>>() {});
+        fundHis.forEach(System.out::println);
+    }
+
+    @Test
+    public void testGetFundHisFail() throws Exception{
+        GetFundHisRequest request = new GetFundHisRequest();
+        request.setCode("000081");
+        request.setStartTime(new Date(123, 7, 15));;
+        request.setEndTime(new Date(122, 7, 15));
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fund/getfundhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void testGetFundHisFail2() throws Exception{
+        GetFundHisRequest request = new GetFundHisRequest();
+        request.setCode("00009999");
+        request.setStartTime(new Date(123, 7, 15));;
+        request.setEndTime(new Date(123, 7, 17));
+
+        // 模拟请求并验证响应
+        MvcResult result = mockMvc.perform(get("/fund/getfundhis")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
     }
 }
