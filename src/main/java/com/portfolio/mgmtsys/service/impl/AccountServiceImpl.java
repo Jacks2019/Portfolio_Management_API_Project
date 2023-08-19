@@ -45,9 +45,9 @@ public class AccountServiceImpl implements AccountService {
         Account accountEncrypted = new Account();
         accountEncrypted.setName(account.getName());
         accountEncrypted.setPassword(DigestUtils.md5Hex(account.getPassword()));
-        repo.save(accountEncrypted);
+        Account save = repo.save(accountEncrypted);
         Account registeredAccount = repo.findOne(nameToBeRegistered).get();
-        registeredAccount.setPassword(null);
+//        registeredAccount.setPassword(null);
         Assets newAssets = new Assets();
         newAssets.setId(registeredAccount.getId());
         newAssets.setBalance(0.0);
