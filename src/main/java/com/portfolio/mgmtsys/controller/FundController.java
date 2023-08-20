@@ -1,5 +1,6 @@
 package com.portfolio.mgmtsys.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -48,7 +49,10 @@ public class FundController {
     }
 
     @GetMapping("/getfundhis")
-    public ResponseEntity<Object> getStockHis(@RequestBody GetFundHisRequest request){
+    public ResponseEntity<Object> getFundHis(@RequestParam("code") String code,
+                                             @RequestParam(value ="startTime", required = false) String startTime,
+                                             @RequestParam(value = "endTime", required = false) String endTime){
+        GetFundHisRequest request = new GetFundHisRequest(code, startTime, endTime);
         List<FundHis> responses = service.getFundHis(request);
         if (responses == null || responses.size() == 0){
             return new ResponseEntity<>("No stock with this ticker is found.", HttpStatus.NOT_FOUND);

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.LinkedList;
 
 @RestController
@@ -51,7 +52,10 @@ public class StockHoldController {
     }
 
     @GetMapping("/gettrades")
-    public ResponseEntity<Object> getTrades(@RequestBody GetTradesRequest request){
+    public ResponseEntity<Object> getTrades(@RequestParam("accountId") Integer accountId,
+                                            @RequestParam(value ="startTime", required = false) String startTime,
+                                            @RequestParam(value = "endTime", required = false) String endTime){
+        GetTradesRequest request = new GetTradesRequest(accountId, startTime, endTime);
         LinkedList<Trade> responses = service.getTrades(request);
         return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
@@ -59,7 +63,10 @@ public class StockHoldController {
     }
 
     @GetMapping("/getallstockholdtrend")
-    public ResponseEntity<Object> getAllStockHoldTrend(@RequestBody GetTrendRequest request){
+    public ResponseEntity<Object> getAllStockHoldTrend(@RequestParam("accountId") Integer accountId,
+                                                       @RequestParam(value ="startTime", required = false) String startTime,
+                                                       @RequestParam(value = "endTime", required = false) String endTime){
+        GetTrendRequest request = new GetTrendRequest(accountId, startTime, endTime);
         LinkedList<GetStockTrendResponse> responses = service.getAllStockHoldTrend(request);
         return responses == null ?
                 new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) :
