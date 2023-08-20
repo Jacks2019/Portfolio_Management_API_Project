@@ -344,12 +344,11 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetTradeDefaultTime() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
+        Integer accountId = 4;
+
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/gettrades")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", String.valueOf(accountId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -365,14 +364,14 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetTrade() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
-        request.setStartTime(new Date(123, 7, 17));;
-        request.setEndTime(TimeUtil.getNowTime());
+        Integer accountId = 4;
+        String startTime = "2023-07-17";
+        String endTime = "2023-08-20";
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/gettrades")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", String.valueOf(accountId))
+                        .param("startTime", startTime)
+                        .param("endTime",endTime))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -387,14 +386,14 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetTradeFail() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
-        request.setStartTime(new Date(123, 7, 17));;
-        request.setEndTime(new Date(123, 7, 16));
+        Integer accountId = 4;
+        String startTime = "2023-07-17";
+        String endTime = "2023-07-15";
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/gettrades")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", String.valueOf(accountId))
+                        .param("startTime", startTime)
+                        .param("endTime",endTime))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(print())
                 .andReturn();
@@ -405,12 +404,10 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetStockTrendDefaultTime() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
+        Integer accountId = 4;
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", String.valueOf(accountId)))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -425,14 +422,13 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetStockTrend() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(TimeUtil.getNowTime());
-        // 模拟请求并验证响应
+        String accountId = "4";
+        String startTime = "2023-07-17";
+        String endTime = "2023-08-20";      // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", accountId)
+                        .param("startTime", startTime)
+                        .param("endTime",endTime))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -447,14 +443,14 @@ public class StockHoldTest {
     @Commit
     @Test
     public void testGetStockTrendFail() throws Exception{
-        GetTradesRequest request = new GetTradesRequest();
-        request.setAccountId(4);
-        request.setStartTime(new Date(123, 7, 17));;
-        request.setEndTime(new Date(123, 7, 16));
+        String accountId = "4";
+        String startTime = "2023-07-17";
+        String endTime = "2023-06-20";
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stockhold/getallstockholdtrend")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("accountId", accountId)
+                        .param("startTime", startTime)
+                        .param("endTime",endTime))
                 .andExpect(MockMvcResultMatchers.status().isUnauthorized())
                 .andDo(print())
                 .andReturn();

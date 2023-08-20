@@ -61,15 +61,16 @@ public class StockTest {
 
     @Test
     public void testGetStockHis() throws Exception{
-        GetStockHisRequest request = new GetStockHisRequest();
-        request.setTicker("300412.SZ");
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(TimeUtil.getNowTime());
+        // 设置请求参数
+        String ticker = "300412.SZ";
+        String startTime = "2023-06-15";
+        String endTime = "2023-08-15";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stock/getstockhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("ticker", ticker)
+                        .param("startTime", startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -82,15 +83,12 @@ public class StockTest {
 
     @Test
     public void testGetStockHisDefault() throws Exception{
-        GetStockHisRequest request = new GetStockHisRequest();
-        request.setTicker("300412.SZ");
-//        request.setStartTime(new Date(123, 7, 15));;
-//        request.setEndTime(TimeUtil.getNowTime());
+        // 设置请求参数
+        String ticker = "300412.SZ";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stock/getstockhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("ticker", ticker))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -104,15 +102,16 @@ public class StockTest {
 
     @Test
     public void testGetStockHisFail() throws Exception{
-        GetStockHisRequest request = new GetStockHisRequest();
-        request.setTicker("300412.SZ");
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(new Date(123, 6, 15));
+        // 设置请求参数
+        String ticker = "300412.SZ";
+        String startTime = "2023-07-15";
+        String endTime = "2023-06-15";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stock/getstockhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("ticker", ticker)
+                        .param("startTime", startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print())
                 .andReturn();
@@ -120,15 +119,16 @@ public class StockTest {
 
     @Test
     public void testGetStockHisFail2() throws Exception{
-        GetStockHisRequest request = new GetStockHisRequest();
-        request.setTicker("300412");
-//        request.setStartTime(new Date(123, 7, 15));;
-//        request.setEndTime(TimeUtil.getNowTime());
+        // 设置请求参数
+        String ticker = "300412.";
+        String startTime = "2023-05-15";
+        String endTime = "2023-06-15";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/stock/getstockhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("ticker", ticker)
+                        .param("startTime", startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print())
                 .andReturn();

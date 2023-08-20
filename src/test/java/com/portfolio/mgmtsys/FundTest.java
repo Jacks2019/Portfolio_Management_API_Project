@@ -62,15 +62,16 @@ public class FundTest {
 
     @Test
     public void testGetFundHis() throws Exception{
-        GetFundHisRequest request = new GetFundHisRequest();
-        request.setCode("000081");
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(TimeUtil.getNowTime());
+
+        String code = "000081";
+        String startTime = "2023-07-15";
+        String endTime = "2023-08-15";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fund/getfundhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("code", code)
+                        .param("startTime",startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -81,13 +82,10 @@ public class FundTest {
 
     @Test
     public void testGetFundHisDefault() throws Exception{
-        GetFundHisRequest request = new GetFundHisRequest();
-        request.setCode("000081");
-
+        String code = "000081";
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fund/getfundhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("code",code))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andDo(print())
                 .andReturn();
@@ -98,15 +96,16 @@ public class FundTest {
 
     @Test
     public void testGetFundHisFail() throws Exception{
-        GetFundHisRequest request = new GetFundHisRequest();
-        request.setCode("000081");
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(new Date(122, 7, 15));
+        String code = "000081";
+        String startTime = "2023-07-15";
+        String endTime = "2022-08-15";
+
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fund/getfundhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("code", code)
+                        .param("startTime",startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print())
                 .andReturn();
@@ -114,15 +113,15 @@ public class FundTest {
 
     @Test
     public void testGetFundHisFail2() throws Exception{
-        GetFundHisRequest request = new GetFundHisRequest();
-        request.setCode("00009999");
-        request.setStartTime(new Date(123, 7, 15));;
-        request.setEndTime(new Date(123, 7, 17));
+        String code = "0009999";
+        String startTime = "2023-07-15";
+        String endTime = "2024-08-15";
 
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fund/getfundhis")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(request)))
+                        .param("code", code)
+                        .param("startTime",startTime)
+                        .param("endTime", endTime))
                 .andExpect(MockMvcResultMatchers.status().isNotFound())
                 .andDo(print())
                 .andReturn();
