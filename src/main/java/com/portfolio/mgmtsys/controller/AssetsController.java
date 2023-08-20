@@ -47,6 +47,7 @@ public class AssetsController {
         Assets assets = null;
         try {
             assets = service.transferOut(request);
+            System.out.println(assets);
         } catch (Exception e) {
             return new ResponseEntity<Object>("Not enough balance", HttpStatus.FORBIDDEN);
         }

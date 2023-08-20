@@ -11,7 +11,6 @@ import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.StockHoldService;
-import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;

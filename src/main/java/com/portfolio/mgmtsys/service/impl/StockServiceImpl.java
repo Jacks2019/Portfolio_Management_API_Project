@@ -5,10 +5,7 @@ import java.util.*;
 
 import com.portfolio.mgmtsys.domain.StockHis;
 import com.portfolio.mgmtsys.model.GetStockHisRequest;
-import com.portfolio.mgmtsys.model.GetStockTrendResponse;
-import com.portfolio.mgmtsys.model.GetTradesRequest;
 import com.portfolio.mgmtsys.repository.StockHisRepo;
-import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
