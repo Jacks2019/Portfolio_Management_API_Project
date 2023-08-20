@@ -33,7 +33,11 @@ public class CheckBalanceAspect {
             Integer id = (Integer)getMethod.invoke(request, "id");
             amount = (Double)getMethod.invoke(request, "amount");
             Optional<Assets> assetsOptional = assetsRepo.findById(id);
-            Assets assets = assetsOptional.get();
+//            Assets assets = assetsOptional.get();
+            Assets assets = assetsOptional.orElse(null);
+            if (assets == null){
+                return;
+            }
             balance = assets.getBalance();
         } catch (Exception e) {
             e.printStackTrace();

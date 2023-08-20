@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.portfolio.mgmtsys.domain.Fund;
 import com.portfolio.mgmtsys.domain.FundHis;
+import com.portfolio.mgmtsys.domain.Stock;
 import com.portfolio.mgmtsys.domain.StockHis;
 import com.portfolio.mgmtsys.model.GetFundHisRequest;
 import com.portfolio.mgmtsys.model.GetStockHisRequest;
@@ -27,10 +28,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.context.WebApplicationContext;
 
-import java.util.Date;
-import java.util.LinkedList;
+import java.util.*;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -59,6 +61,103 @@ public class FundTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(wac).build();
 
     }
+    @Test
+    public void testGetAllFunds() throws Exception{
+        String page = "3";
+        String pageSize = "100";
+        MvcResult result = mockMvc.perform(get("/fund/getallfunds")
+                        .param("page", page)
+                        .param("pageSize", pageSize))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        List<Fund> funds= objectMapper.readValue(responseContent, new TypeReference<List<Fund>>() {});
+        for (Fund fund : funds) {
+            System.out.println(fund);
+        }
+    }
+
+    @Test
+    public void testGetAllFundsDefault() throws Exception{
+
+        MvcResult result = mockMvc.perform(get("/fund/getallfunds"))
+                   .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        List<Fund> funds= objectMapper.readValue(responseContent, new TypeReference<List<Fund>>() {});
+        for (Fund fund : funds) {
+            System.out.println(fund);
+        }
+    }
+
+    @Test
+    public void testGetFndByCode() throws Exception{
+        String code = "012447";
+        MvcResult result = mockMvc.perform(get("/fund/getfundbycode")
+                        .param("code",code))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        System.out.println("responseContent = " + responseContent);
+        Fund fund= objectMapper.readValue(responseContent, new TypeReference<Fund>() {});
+        System.out.println(fund);
+    }
+
+    @Test
+    public void testGetFndByCodeFail() throws Exception{
+        String code = "99999";
+        MvcResult result = mockMvc.perform(get("/fund/getfundbycode")
+                        .param("code",code))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
+    }
+
+    @Test
+    public void testSearchFund() throws Exception{
+        String code = "01";
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("code", code);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        for (Map.Entry<String, Object> entry : searchMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            params.add(key, value.toString());
+        }
+        MvcResult result = mockMvc.perform(get("/fund/searchfund")
+                        .queryParams(params))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andDo(print())
+                .andReturn();
+        String responseContent = result.getResponse().getContentAsString();
+        List<Fund> funds= objectMapper.readValue(responseContent, new TypeReference<List<Fund>>() {});
+        for (Fund fund : funds) {
+            System.out.println(fund);
+        }
+    }
+
+    @Test
+    public void testSearchFundFail() throws Exception{
+        String code = "99999";
+        Map<String, Object> searchMap = new HashMap<>();
+        searchMap.put("code", code);
+        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+        for (Map.Entry<String, Object> entry : searchMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            params.add(key, value.toString());
+        }
+        MvcResult result = mockMvc.perform(get("/fund/searchfund")
+                        .queryParams(params))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andDo(print())
+                .andReturn();
+
+    }
+
 
     @Test
     public void testGetFundHis() throws Exception{

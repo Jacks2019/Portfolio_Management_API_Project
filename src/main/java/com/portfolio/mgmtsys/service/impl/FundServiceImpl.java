@@ -6,10 +6,8 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.portfolio.mgmtsys.domain.FundHis;
-import com.portfolio.mgmtsys.domain.StockHis;
 import com.portfolio.mgmtsys.model.GetFundHisRequest;
 import com.portfolio.mgmtsys.repository.FundHisRepo;
-import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;

@@ -8,18 +8,15 @@ package com.portfolio.mgmtsys.service.impl;
 
 import com.portfolio.mgmtsys.domain.*;
 import com.portfolio.mgmtsys.enumeration.FundTradeType;
-import com.portfolio.mgmtsys.enumeration.TradeType;
 import com.portfolio.mgmtsys.model.*;
 import com.portfolio.mgmtsys.repository.*;
 import com.portfolio.mgmtsys.service.FundHoldService;
-import com.portfolio.mgmtsys.utils.RepoUtil;
 import com.portfolio.mgmtsys.utils.TimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
