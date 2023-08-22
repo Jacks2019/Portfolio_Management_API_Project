@@ -309,13 +309,16 @@ public class StockHoldServiceImpl implements StockHoldService {
             }
             GetStockTrendResponse response = new GetStockTrendResponse();
             List<Double> prices = new LinkedList<>();
+            List<Date> dates = new LinkedList<>();
             response.setName(myStock.getTicker());
             response.setTicker(stockHis.get(0).getTicker());
             for (StockHis stockHis0 : stockHis) {
                 prices.add(stockHis0.getCurrentPrice());
+                dates.add(stockHis0.getTime());
             }
             response.setPrices(prices);
             responses.add(response);
+            response.setDates(dates);
         }
         return responses;
     }

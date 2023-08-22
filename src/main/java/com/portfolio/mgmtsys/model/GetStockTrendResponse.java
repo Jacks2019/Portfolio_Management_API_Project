@@ -7,14 +7,16 @@ package com.portfolio.mgmtsys.model;
  */
 
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class GetStockTrendResponse  extends Response{
     // [{股票名称，股票代码，[股票价格]}]
     private String name;
     private String ticker;
     private List<Double> prices;
+
+    private List<Date> dates = new LinkedList<>();
+
 
     public String getName() {
         return name;
@@ -40,12 +42,33 @@ public class GetStockTrendResponse  extends Response{
         this.prices = prices;
     }
 
+    public List<Date> getDates() {
+        return dates;
+    }
+
+    public void setDates(List<Date> dates) {
+        this.dates = dates;
+    }
+
     @Override
     public String toString() {
         return "GetStockTrendResponse{" +
                 "name='" + name + '\'' +
                 ", ticker='" + ticker + '\'' +
                 ", prices=" +  prices.toString() +
+                ", dates=" + dates +
                 '}';
+    }
+
+    public void addDates(Date[] time) {
+        Date startTime = time[0];
+        Date endTime = time[1];
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startTime);
+
+        while (calendar.getTime().before(endTime) || calendar.getTime().equals(endTime)) {
+            dates.add(calendar.getTime());
+            calendar.add(Calendar.DATE, 1);
+        }
     }
 }

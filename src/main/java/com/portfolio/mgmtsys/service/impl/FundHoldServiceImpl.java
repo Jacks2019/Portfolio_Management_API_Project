@@ -240,13 +240,16 @@ public class FundHoldServiceImpl implements FundHoldService {
             }
             GetFundTrendResponse response = new GetFundTrendResponse();
             List<Double> prices = new LinkedList<>();
+            List<Date> dates = new LinkedList<>();
             response.setCode(myFund.getCode());
 
             for (FundHis stockHis0 : fundHis) {
                 prices.add(stockHis0.getUnitNet());
+                dates.add(stockHis0.getTime());
             }
             response.setPrices(prices);
             responses.add(response);
+            response.setDates(dates);
         }
 
         return responses;
