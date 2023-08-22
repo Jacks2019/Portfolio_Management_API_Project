@@ -181,7 +181,7 @@ public class FundTest {
 
     @Test
     public void testGetFundHisDefault() throws Exception{
-        String code = "000081";
+        String code = "970205";
         // 模拟请求并验证响应
         MvcResult result = mockMvc.perform(get("/fund/getfundhis")
                         .param("code",code))
