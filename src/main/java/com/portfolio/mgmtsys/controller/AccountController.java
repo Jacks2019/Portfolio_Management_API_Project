@@ -25,6 +25,7 @@ public class AccountController {
         if(accountId!=null){
             Map<String, Object> body = new HashMap<>();
             body.put("id", accountId);
+            body.put("name", account.getName());
             return new ResponseEntity<Object>(body, HttpStatus.OK);
         }
         return new ResponseEntity<Object>("Account name or password may be incorrect.", HttpStatus.UNAUTHORIZED);
