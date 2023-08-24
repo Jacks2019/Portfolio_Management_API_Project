@@ -1,0 +1,161 @@
+@startuml
+interface repository.TransferRepo {
+}
+class controller.StockController {
++ ResponseEntity getAllStocks(Integer,Integer)
++ ResponseEntity searchStock(Map<String,Object>)
++ ResponseEntity getStockByTicker(String)
++ ResponseEntity getStockHis(String,String,String)
+}
+
+interface repository.AccountRepo {
+}
+class controller.FundHoldController {
++ ResponseEntity getAllStockHold(Integer)
++ ResponseEntity buyFund(BuyAndSellFundRequest)
++ ResponseEntity sellFund(BuyAndSellFundRequest)
++ ResponseEntity sellFund(Integer,String,String)
++ ResponseEntity getAllStockHoldTrend(Integer,String,String)
+}
+class controller.StockHoldController {
++ ResponseEntity getAllStockHold(Integer)
++ ResponseEntity buyStock(BuyAndSellStockRequest)
++ ResponseEntity sellStock(BuyAndSellStockRequest)
++ ResponseEntity getTrades(Integer,String,String)
++ ResponseEntity getAllStockHoldTrend(Integer,String,String)
+}
+class controller.AccountController {
++ ResponseEntity login(Account)
++ ResponseEntity register(Account)
+}
+
+interface repository.StockRepo {
+}
+interface repository.StockHisRepo {
+}
+class controller.AssetsController {
++ ResponseEntity getAssetsById(Integer)
++ ResponseEntity transferIn(Map<String,Object>)
++ ResponseEntity transferOut(Map<String,Object>)
+}
+interface repository.TradeRepo {
+}
+
+class controller.FundController {
++ ResponseEntity getAllFunds(Integer,Integer)
++ ResponseEntity searchFund(Map<String,Object>)
++ ResponseEntity getFundByCode(String)
++ ResponseEntity getFundHis(String,String,String)
+}
+interface repository.FundHisRepo {
+}
+interface repository.AssetsRepo {
+}
+interface repository.FundHoldRepo {
+}
+interface repository.StockHoldRepo {
+}
+interface repository.FundTradeRepo {
+}
+interface repository.FundRepo {
+}
+
+class task.ScheduledTask{
++void scheduleUpdateAsserts()
+}
+
+'interface service.AssetsService {
+'}
+'
+'interface service.AccountService {
+'}
+'interface service.FundService {
+'}
+'interface service.StockService {
+'}
+'interface service.FundHoldService {
+'}
+'interface service.StockHoldService {
+'}
+class  service.AccountServiceImpl{
+}
+class service.AssetsServiceImpl{
+}
+
+class service.FundServiceImpl{
+}
+class service.FundHoldServiceImpl{
+}
+class service.StockServiceImpl{
+}
+class service.StockHoldServiceImpl{
+}
+'JpaRepository <|-- TransferRepo
+'JpaRepository <|-- AccountRepo
+'JpaRepository <|-- StockRepo
+'JpaRepository <|-- StockHisRepo
+'JpaSpecificationExecutor <|-- StockHisRepo
+'JpaRepository <|-- TradeRepo
+'JpaSpecificationExecutor <|-- TradeRepo
+'JpaRepository <|-- FundHisRepo
+'JpaSpecificationExecutor <|-- FundHisRepo
+'JpaRepository <|-- AssetsRepo
+'JpaRepository <|-- FundHoldRepo
+'JpaRepository <|-- StockHoldRepo
+'JpaRepository <|-- FundTradeRepo
+'JpaSpecificationExecutor <|-- FundTradeRepo
+'JpaRepository <|-- FundRepo
+
+AccountController..>AccountServiceImpl
+AssetsController..>AssetsServiceImpl
+FundController..>FundServiceImpl
+FundHoldController..>FundHoldServiceImpl
+StockController..>StockServiceImpl
+StockHoldController..>StockHoldServiceImpl
+
+'AccountService<|..AccountServiceImpl
+'AssetsService<|..AssetsServiceImpl
+'FundService<|..FundServiceImpl
+'FundHoldService<|..FundHoldServiceImpl
+'StockService<|..StockServiceImpl
+'StockHoldService<|..StockHoldServiceImpl
+
+
+'AccountServiceImpl..>AssetsRepo
+'AccountServiceImpl..>AccountRepo
+'
+'AssetsServiceImpl..>AssetsRepo
+'AssetsServiceImpl..>TransferRepo
+'
+'FundHoldServiceImpl..>FundHoldRepo
+'FundHoldServiceImpl..>AssetsRepo
+'FundHoldServiceImpl..>FundRepo
+'FundHoldServiceImpl..>FundTradeRepo
+'FundHoldServiceImpl..>FundHisRepo
+'
+'FundServiceImpl..>FundRepo
+'FundServiceImpl..>FundHisRepo
+'
+'StockHoldServiceImpl..>StockRepo
+'StockHoldServiceImpl..>StockHoldRepo
+'StockHoldServiceImpl..>AssetsRepo
+'StockHoldServiceImpl..>TradeRepo
+'StockHoldServiceImpl..>StockHisRepo
+'
+'StockServiceImpl..>StockRepo
+'StockServiceImpl..>StockHisRepo
+
+
+AccountServiceImpl..>repository
+AssetsServiceImpl..>repository
+FundHoldServiceImpl..>repository
+FundServiceImpl..>repository
+StockHoldServiceImpl..>repository
+
+StockServiceImpl..>repository
+ScheduledTask..>repository
+'package controller{
+'  AssetsController
+'  AccountController
+'}
+@enduml

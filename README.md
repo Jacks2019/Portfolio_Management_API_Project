@@ -1,5 +1,5 @@
 # Portfolio_Management_API_Project
-Group9
+FOURever NOOBS
 
 ### Requirements
 
@@ -10,6 +10,10 @@ Group9
 
 ### Task allocation
 
-1. Yawei：Frontend Display
-2. Zihan：Data Retrieval and Database Table Creation
-3. Yancheng & Xiaoyu：Backend Data Processing
+1. Xiaoyu Liu      - Backend & Junit Test 
+2. Yancheng Su  - Backend & Frontend 
+3. Yawei Wang   - Frontend & Integration 
+4. Zihan Liu        - Data & Think Tank
+
+### User jira to efficiently manage tasks
+https://github.com/users/lxy9903/projects/1/views/3

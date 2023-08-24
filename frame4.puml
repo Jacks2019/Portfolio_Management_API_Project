@@ -1,0 +1,209 @@
+@startuml
+interface TransferRepo {
+}
+interface StockService {
+}
+interface FundHoldService {
+}
+class FundHoldController {
++ ResponseEntity<Object> getAllStockHold(Integer)
++ ResponseEntity<Object> buyFund(BuyAndSellFundRequest)
++ ResponseEntity<Object> sellFund(BuyAndSellFundRequest)
++ ResponseEntity<Object> sellFund(Integer,String,String)
++ ResponseEntity<Object> getAllStockHoldTrend(Integer,String,String)
+}
+class StockHoldController {
++ ResponseEntity<Object> getAllStockHold(Integer)
++ ResponseEntity<Object> buyStock(BuyAndSellStockRequest)
++ ResponseEntity<Object> sellStock(BuyAndSellStockRequest)
++ ResponseEntity<Object> getTrades(Integer,String,String)
++ ResponseEntity<Object> getAllStockHoldTrend(Integer,String,String)
+}
+interface StockHoldService {
+}
+interface StockHisRepo {
+}
+class AssetsController {
++ ResponseEntity<Object> getAssetsById(Integer)
++ ResponseEntity<Object> transferIn(Map<String,Object>)
++ ResponseEntity<Object> transferOut(Map<String,Object>)
+}
+interface TradeRepo {
+}
+interface FundService {
+}
+interface AssetsRepo {
+}
+interface FundTradeRepo {
+}
+interface AssetsService {
+}
+interface FundRepo {
+}
+class AccountServiceImpl {
++ Integer login(Account)
++ Account register(Account)
+}
+class StockController {
++ ResponseEntity<Object> getAllStocks(Integer,Integer)
++ ResponseEntity<Object> searchStock(Map<String,Object>)
++ ResponseEntity<Object> getStockByTicker(String)
++ ResponseEntity<Object> getStockHis(String,String,String)
+}
+interface AccountRepo {
+}
+class FundHoldServiceImpl {
++ List<FundHold> getAllFundHold(Integer)
++ boolean buyFund(BuyAndSellFundRequest)
++ boolean sellFund(BuyAndSellFundRequest)
++ LinkedList<FundTrade> getTrades(GetTradesRequest)
++ LinkedList<GetFundTrendResponse> getAllFundHoldTrend(GetTrendRequest)
+}note left of FundHoldServiceImpl::getAllFundHold(Integer)
+
+     * 查询所有持有基金：/fundhold/getallfubdhold
+     * 请求方式：get
+     * @param accountId 登陆ID
+     * @return [fundhold]
+     
+end note
+note right of FundHoldServiceImpl::buyFund(BuyAndSellFundRequest)
+
+     * 购买基金：/fundhold/buyfund
+     * 请求方式：post
+     * Response：{true/false}
+     * @param request 登陆ID，基金代码，购买数目
+     * @return {true/false}
+     
+end note
+note left of FundHoldServiceImpl::getTrades(GetTradesRequest)
+
+     * 查询基金交易记录：/fundhold/gettrades
+     * @param request 登陆ID，交易时间段（默认近七天）
+     * @return [FundTrade：{操作类型，基金名字，基金代码，操作时价格，买入卖出数量，操作时间}]
+     
+end note
+note right of FundHoldServiceImpl::getAllFundHoldTrend(GetTrendRequest)
+
+     * 查询持有基金价格变化：/fundhold/getallfundkholdtrend
+     * @param request 登陆ID，查询时间段（默认近七天）
+     * @return [{基金名称，基金代码，[基金价格]}]
+     
+end note
+
+class AccountController {
++ ResponseEntity<Object> login(Account)
++ ResponseEntity<Object> register(Account)
+}
+interface StockRepo {
+}
+class StockHoldServiceImpl {
++ Stock findStockByTicker(String)
++ StockHold findStockHoldByTickerAndAccount(String,Integer)
++ LinkedList<MyStockResponse> getAllStockHold(Integer)
++ boolean buyStock(BuyAndSellStockRequest)
++ boolean sellStock(BuyAndSellStockRequest)
++ LinkedList<Trade> getTrades(GetTradesRequest)
++ LinkedList<GetStockTrendResponse> getAllStockHoldTrend(GetTrendRequest)
++ List<StockHis> findStockHis(String,Date,Date)
+}note left of StockHoldServiceImpl::getAllStockHold(Integer)
+
+     * 通过登陆ID查找持有股票信息，涉及Stock表和StockHold表
+     * @param accountId 账户ID
+     * @return [{股票名，股票代码，持股数目，股票价格}]
+     
+end note
+note right of StockHoldServiceImpl::buyStock(BuyAndSellStockRequest)
+
+     *
+     * @param request {登陆ID，股票代码，购买数目}
+     * @return 购买是否成功
+     
+end note
+note left of StockHoldServiceImpl::sellStock(BuyAndSellStockRequest)
+
+     *
+     * @param request {登陆ID，股票代码，销售数目}
+     * @return 售卖是否成功
+     
+end note
+note right of StockHoldServiceImpl::getTrades(GetTradesRequest)
+
+     *
+     * @param request {登陆ID，交易时间段（默认近七天）}
+     * @return [Trade：{操作类型，股票名字，股票代码，操作时价格，买入卖出数量，操作时间}]
+     
+end note
+note left of StockHoldServiceImpl::getAllStockHoldTrend(GetTrendRequest)
+
+     * 查询持股价格变化
+     * @param request {登陆ID，查询时间段（默认近七天）}
+     * @return [{股票名称，股票代码，[股票价格]}]
+     
+end note
+
+class FundServiceImpl {
++ List<Fund> getAllFunds(Integer,Integer)
++ List<Fund> searchFund(Map<String,Object>)
++ Fund getFundByCode(String)
++ List<FundHis> getFundHis(GetFundHisRequest)
+}
+class FundController {
++ ResponseEntity<Object> getAllFunds(Integer,Integer)
++ ResponseEntity<Object> searchFund(Map<String,Object>)
++ ResponseEntity<Object> getFundByCode(String)
++ ResponseEntity<Object> getFundHis(String,String,String)
+}
+class AssetsServiceImpl {
++ Assets getAssetsById(Integer)
++ Assets transferIn(Map<String,Object>)
++ Assets transferOut(Map<String,Object>)
+}
+interface FundHisRepo {
+}
+interface FundHoldRepo {
+}
+note top of FundHoldRepo
+@Repository
+end note
+
+interface StockHoldRepo {
+}
+class StockServiceImpl {
++ List<Stock> getAllStocks(Integer,Integer)
++ List<Stock> searchStock(Map<String,Object>)
++ Stock getStockByTicker(String)
++ List<StockHis> getStockHis(GetStockHisRequest)
+}note left of StockServiceImpl::getStockHis(GetStockHisRequest)
+
+     * stock/getstockhis
+     * @param request ticker，time
+     * @return 时间范围内股票价格
+     
+end note
+
+interface AccountService {
+}
+
+
+JpaRepository <|-- TransferRepo
+JpaRepository <|-- StockHisRepo
+JpaSpecificationExecutor <|-- StockHisRepo
+JpaRepository <|-- TradeRepo
+JpaSpecificationExecutor <|-- TradeRepo
+JpaRepository <|-- AssetsRepo
+JpaRepository <|-- FundTradeRepo
+JpaSpecificationExecutor <|-- FundTradeRepo
+JpaRepository <|-- FundRepo
+AccountService <|.. AccountServiceImpl
+JpaRepository <|-- AccountRepo
+FundHoldService <|.. FundHoldServiceImpl
+JpaRepository <|-- StockRepo
+StockHoldService <|.. StockHoldServiceImpl
+FundService <|.. FundServiceImpl
+AssetsService <|.. AssetsServiceImpl
+JpaRepository <|-- FundHisRepo
+JpaSpecificationExecutor <|-- FundHisRepo
+JpaRepository <|-- FundHoldRepo
+JpaRepository <|-- StockHoldRepo
+StockService <|.. StockServiceImpl
+@enduml

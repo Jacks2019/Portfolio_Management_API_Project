@@ -41,8 +41,8 @@ public class ScheduledTask {
     /**
      * 定时更新Assert
      */
-    @Scheduled(cron = "0 45 12 * * *") // 每天九点半执行
-//    @Scheduled(cron = "0 30 9 * * *") // 每天九点半执行
+//    @Scheduled(cron = "0 45 12 * * *") // 每天九点半执行
+    @Scheduled(cron = "0 30 9 * * *") // 每天九点半执行
     public void scheduleUpdateAsserts() {
         // 定时任务的逻辑代码
         System.out.println("定时任务执行中...");
@@ -73,7 +73,5 @@ public class ScheduledTask {
             assets.setTotalAssets(stockAss + fundAss + assets.getBalance());
             assetsRepo.save(assets);
         }
-
-
     }
 }
